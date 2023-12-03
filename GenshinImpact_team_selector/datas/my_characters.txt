@@ -1,0 +1,2 @@
+Ayaka,0,6,1
+Alhaitham,0,3,1
