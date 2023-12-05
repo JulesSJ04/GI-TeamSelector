@@ -220,9 +220,31 @@ void Box::writeToFile(Character c) {
 }
 
 Character Box::getCharacterByName(std::string name) {
-    return this->m_characters[name];
+    return this->m_characters.at(name);
 }
 
-bool Box::hasCharacter(std::string name) {
-    return ToF(this->m_characters.count(name));
+bool Box::hasCharacter(std::string name, int build) {
+    bool name_presence = ToF(this->m_characters.count(name));
+    if (build == 1) {
+        if (name_presence) {
+            bool build_possession = this->m_characters[name].hasBuild();
+            return build_possession ;
+        }
+    } else {
+        return name_presence;
+    }
+    return false;
+}
+
+void Box::removeCharacterFromMyBox(std::string name) {
+    const std::string filename = "./datas/my_characters.txt";
+
+    // Read the file into a vector of strings
+    std::ifstream inputFile(filename);
+    if (!inputFile.is_open()) {
+        std::cerr << "Error opening file: " << filename << std::endl;
+        return;
+    }
+
+
 }

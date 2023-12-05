@@ -10,7 +10,7 @@ std::string Character::displayBool() const {
 }
 
 void Character::displayCharacter() const {
-    std::cout << this->m_name << " of type " << elementToString(this->m_element) 
+    std::cout << BG_WHITE << "\t" + this->m_name + "\t\t" << RESET <<" => type " << elementToString(this->m_element) 
         <<  " has role " << roleToString(this->m_role)  << " and" << this->displayBool()
         << std::endl;  
 }

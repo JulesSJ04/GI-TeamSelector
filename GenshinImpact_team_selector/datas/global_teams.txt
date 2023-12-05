@@ -1,0 +1,6 @@
+Quickbloom,Cyno,Furina,Baizhu,Nahida,9
+Suractivation,Cyno,Nahida,Fischl,Baizhu,8
+Hyperbloom,Cyno,Kuki,Xingqiu,Nahida,8
+Quickbloom2,Cyno,Furina,Fischl,Baizhu,8
+AFK,Yae,Fischl,Furina,Kazuha,8
+Suractivation,Yae,Fischl,Nahida,Kazuha,9

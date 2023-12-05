@@ -24,11 +24,13 @@ public:
     bool loadCharacters();
     void getCharacterDifference();
     // Used for team filling
-    bool hasCharacter(std::string c);
+    bool hasCharacter(std::string c, int build);
     Character getCharacterByName(std::string name);
     // Character adding
     void addCharacterToBox();
     void writeToFile(Character c);
+    // Box modifying
+    void removeCharacterFromMyBox(std::string name);
     
     
 };

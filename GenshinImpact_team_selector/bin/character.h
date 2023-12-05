@@ -16,7 +16,7 @@ private:
 public:
     Character(){}
     Character(std::string n, Character_role r, Element e, bool b);
-    virtual ~Character() {std::cout << "Destroy character " << m_name << std::endl; }
+    virtual ~Character() {}
 
     void displayCharacter() const;
     std::string displayBool() const;
@@ -31,7 +31,7 @@ public:
     const Element& getElement() const { return m_element; }
     void setElement(const Element& element) { m_element = element; }
     // Getter and Setter for m_has_build
-    bool hasBuild() const { return m_has_build; }
+    bool hasBuild() { return m_has_build; }
     void setHasBuild(bool hasBuild) { m_has_build = hasBuild; }
 };
 
