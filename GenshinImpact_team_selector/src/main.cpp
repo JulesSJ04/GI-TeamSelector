@@ -17,14 +17,14 @@ bool menuSwitch(int choice, Box * box, Team_list * teams)
     case 3: // Remove character from my box
         std::cout << "Not implemented yet" << std::endl;
         break;
-    case 4: // Update a character role from my box
-        std::cout << "Not implemented yet" << std::endl;
+    case 4: // Display all the team I can use
+        teams->displayTeams();
         break;
     case 5: // Displays teams from one character
         teams->displayTeamsByName();
         break;
     case 6: // Displays teams from one character
-        break;
+        teams->displayTwoTeam();
     default:
         break;
     }
@@ -46,7 +46,7 @@ int main(int argc, char ** argv){
             << BG_WHITE << "1. Display characters from my box       " << RESET << std::endl
             << BG_WHITE << "2. Add character to my box              " << RESET << std::endl
             << BG_WHITE << "3. Remove character from my box         "  << RESET << std::endl
-            << BG_WHITE << "4. Update a character role from my box  " << RESET << std::endl
+            << BG_WHITE << "4. Display all the teams I can use      " << RESET << std::endl
             << BG_WHITE << "5. Find 1 team from 1 character         " << RESET << std::endl
             << BG_WHITE << "6. Find 2 team from 2 character         " << RESET <<std::endl;
         std::cin >> choice;

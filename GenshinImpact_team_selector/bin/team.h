@@ -11,6 +11,7 @@ private:
     int m_note;
 
 public :
+    Team() {} //NEEDED FOR UNORDERED MAP
     Team(std::string na, Character c1, Character c2, Character c3, Character c4, int n);
     virtual ~Team() {}
 

@@ -14,7 +14,7 @@ private:
     bool m_has_build;
 
 public:
-    Character(){}
+    Character(){} //NEEDED FOR UNORDERED MAP
     Character(std::string n, Character_role r, Element e, bool b);
     virtual ~Character() {}
 

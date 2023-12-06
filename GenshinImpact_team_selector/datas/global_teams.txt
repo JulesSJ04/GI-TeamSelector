@@ -4,3 +4,5 @@ Hyperbloom,Cyno,Kuki,Xingqiu,Nahida,8
 Quickbloom2,Cyno,Furina,Fischl,Baizhu,8
 AFK,Yae,Fischl,Furina,Kazuha,8
 Suractivation,Yae,Fischl,Nahida,Kazuha,9
+Geo-centred,Itto,Gorou,Zhongli,Albedo,8
+Geo-centred-atk+,Itto,Gorou,Zhongli,Bennett,8

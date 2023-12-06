@@ -1,8 +1,11 @@
 #include "team_list.h"
 
+int Team_list::s_team_id = 0;
+
 Team_list::Team_list(Box * b)
     : m_box(b)
 {
+    s_team_id = 0;
     this->loadTeams();
     this->computePossibleTeams();
 }
@@ -64,15 +67,16 @@ void Team_list::computePossibleTeams() {
             bool has_been_added = this->isAlreadyAdded(elem);
             // Ajouter la team si ils existent dans la box
             if (has_been_added == false) {
-                this->m_teams.push_back(Team(
+                this->m_teams[this->s_team_id] = 
+                    Team(
                     elem.name,
                     this->m_box->getCharacterByName(elem.characters[0]),
                     this->m_box->getCharacterByName(elem.characters[1]),
                     this->m_box->getCharacterByName(elem.characters[2]),
                     this->m_box->getCharacterByName(elem.characters[3]),
-                    elem.note
-                ));
+                    elem.note);
             }
+            this->s_team_id++;
         }
         
     }
@@ -84,7 +88,7 @@ bool Team_list::isAlreadyAdded(const String_team &team) {
     for (auto existingTeam : this->m_teams) {
         int match_cpt = 0;
         // Récupérer les 4 noms de l'équipe
-        std::vector<std::string> existingNames = existingTeam.getNames();
+        std::vector<std::string> existingNames = existingTeam.second.getNames();
         // Pour chacuns des noms de l'équipe en cours, reagrder si identique à l'équipe en paramètre
         for (unsigned int i=0; i<TEAM_SIZE; i++) {
             for(unsigned int j=0; j<TEAM_SIZE; j++) {
@@ -97,7 +101,17 @@ bool Team_list::isAlreadyAdded(const String_team &team) {
         }
     }
     return false; 
+}
 
+bool Team_list::isAlreadyUsed(int team_id, std::vector<std::string> picked_character_names) {
+    std::vector<std::string> four_characters_names = this->m_teams.at(team_id).getNames();
+    for(const auto &elem: four_characters_names) {
+        for (const auto &elem2: picked_character_names) {
+            if(elem.compare(elem2) == 0)
+                return true;
+        }
+    }
+    return false;
 }
 
 bool Team_list::checkOwnership(std::string character_name, int build) {
@@ -109,9 +123,11 @@ bool Team_list::checkOwnership(std::string character_name, int build) {
     return true;
 }
 
-void Team_list::displayTeams() const {
+void Team_list::displayTeams() {
+    //Vérifier que les teams sont à jour
+    this->computePossibleTeams();
     for (const auto &elem: this->m_teams) {
-        elem.displayTeam();
+        elem.second.displayTeam();
     }
 }
 
@@ -147,25 +163,95 @@ void Team_list::displayTeamsByName() {
     }
     // Parcourir les équipes
     std::cout << "Acquiring possible teams" << std::endl;
-    for (unsigned int i = 0; i < this->m_teams.size() ; i++) {
+    for (auto &elem: this->m_teams) {
         // Vérifier si elles contiennent le personnage
-        if (this->m_teams[i].isCharacterInTeam(character_name)) 
-            this->m_teams[i].displayTeam();
+        if (elem.second.isCharacterInTeam(character_name)) 
+            elem.second.displayTeam();
     }
 }
 
-void Team_list::displaySecondTeam(std::string character1, std::string character2) {
-    // Vérifier si les personnages sont présent dans la box 
+void Team_list::displayTwoTeam() {
+    //Vérifier que les teams sont à jour
+    this->computePossibleTeams();
+
+    if (this->m_teams.size() == 0) {
+        std::cout << BG_RED <<"No team matches your characters" << RESET << std::endl;
+        return;
+    }
+
+    // Récupérer le nom du personnages
+    std::cout << BG_YELLOW << "Pick a character you want to see the teams :" << RESET <<std::endl;
+    std::string character1;
+    std::cin >> character1;
+
+    // Vérifier si le personnages est présent dans la box 
     if (this->checkOwnership(character1, this->buildPrompt()) == false) {return;}
-    if (this->checkOwnership(character2, this->buildPrompt()) == false) {return;}
+    
     // Récupérer la première team choisie
-    String_team picked_team = this->getFirstTeam(character1);
-    
+    int picked_team_1 = this->getFirstTeam(character1);
+
+    // Récupérer le nom du personnages
+    std::cout << BG_YELLOW << "Pick a character you want to see in the second team :" << RESET <<std::endl;
+    std::string character2;
+    std::cin >> character2;
+    if (this->checkOwnership(character2, this->buildPrompt()) == false) {return;}
+    // Etape 1 : Récupérer les 4 noms de l'équipe choisie
+    std::vector<std::string> four_picked_character = this->m_teams.at(picked_team_1).getNames();
+    std::set<int> user_input_check;
+    // Etape 2 : parcourir les équipes
+    for (auto &elem: this->m_teams) {
+        // Vérifier si elles contiennent le personnage
+        if (elem.second.isCharacterInTeam(character2))  
+        {
+            // Vérifier si l'un des 4 personnages n'est pas déjà dans une équipe 
+            if (!this->isAlreadyUsed(elem.first, four_picked_character)) {
+                std::cout << " " << PURPLE << elem.first << RESET << " ";
+                elem.second.displayTeam();
+                user_input_check.insert(elem.first);
+            }
+            
+        }
+    }
+    if (user_input_check.size() == 0) {
+        std::cout << BG_RED << "You can't pick a second team from your box ..." << RESET <<std::endl;
+        return;
+    }
+    // Acquérir le choix user
+    int picked_team_2 = -1;
+    do {
+        std::cout << BG_YELLOW << "Pick a team from the displayed list from his number :" << RESET << std::endl;
+        std::cin >> picked_team_2;
+    } while(user_input_check.count(picked_team_2) != 1);
+    this->displayTwoTeams(picked_team_1, picked_team_2);
 }
 
 
-String_team Team_list::getFirstTeam(std::string character_name) {
-    
+int Team_list::getFirstTeam(std::string character_name) {
+    std::cout << BG_WHITE << "Consider this list of teams" << RESET << std::endl;
+    std::set<int> user_input_check;
+    int picked_team = -1;
+    // Parcourir les équipes
+    for (auto &elem: this->m_teams) {
+        // Vérifier si elles contiennent le personnage
+        if (elem.second.isCharacterInTeam(character_name))  
+        {
+            std::cout << " " << PURPLE << elem.first << RESET << " ";
+            elem.second.displayTeam();
+            user_input_check.insert(elem.first);
+        }
+    }
+    // Acquérir le choix user
+    do {
+        std::cout << BG_YELLOW << "Pick a team from the displayed list from his number :" << RESET << std::endl;
+        std::cin >> picked_team;
+    } while(user_input_check.count(picked_team) != 1);
+    return picked_team;
 }
 
-
+void Team_list::displayTwoTeams(int team1_id, int team2_id) {
+    std::cout << "\t\t" << BG_YELLOW << " - PICKED TEAM 1 - " << RESET << "\t\t" << std::endl;
+    this->m_teams.at(team1_id).displayTeam();
+    std::cout << "\t\t" << BG_YELLOW << " - PICKED TEAM 2 - " << RESET << "\t\t" << std::endl;
+    this->m_teams.at(team2_id).displayTeam();
+    std::cout << "\t\t" << BG_YELLOW << " - ############# - " << RESET << "\t\t" << std::endl;
+}

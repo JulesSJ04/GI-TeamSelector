@@ -11,8 +11,9 @@ struct String_team {
 
 class Team_list {
 private:
+    static int s_team_id;
     std::vector<String_team> m_global_teams;
-    std::vector<Team> m_teams;
+    std::unordered_map<int, Team> m_teams;
     Box * m_box;
     
 public:
@@ -23,14 +24,16 @@ public:
     void loadTeams(); // Charger les teams de la base de données
     void computePossibleTeams(); // Trouver les teams réalisable depuis la BDD et la box
     bool isAlreadyAdded(const String_team &team); //Vérifier si la team n'a pas déjà été ajoutée
+    bool isAlreadyUsed(int team_id, std::vector<std::string> picked_character_names);
     int buildPrompt();
     bool checkOwnership(std::string character_name, int build);
     // display all teams
-    void displayTeams() const;
+    void displayTeams();
     void displayTeamsByName();
+    void displayTwoTeams(int team1_id, int team2_id);
 
 
     // Select two teams
-    String_team getFirstTeam(std::string character_name);
-    void displaySecondTeam(std::string character1, std::string character2);
+    int getFirstTeam(std::string character_name);
+    void displayTwoTeam();
 };
