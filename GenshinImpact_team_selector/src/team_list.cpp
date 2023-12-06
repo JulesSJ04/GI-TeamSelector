@@ -116,7 +116,8 @@ bool Team_list::isAlreadyUsed(int team_id, std::vector<std::string> picked_chara
 
 bool Team_list::checkOwnership(std::string character_name, int build) {
     if (this->m_box->hasCharacter(character_name, build) == false) {
-        std::cout << "The specified character " << character_name << " is not in your box or has not a build : " <<std::endl;
+        std::cout << BG_RED << "The specified character " << character_name << " is not in your box or has not a build : " 
+        << RESET << std::endl;
         this->m_box->displayBox();
         return false;
     }
@@ -134,11 +135,11 @@ void Team_list::displayTeams() {
 int Team_list::buildPrompt() {
     // Récupérer le facteur de build
     int has_build;
-    std::cout << "Does he need build ? 0. No 1. Yes" << std::endl;
+    std::cout << BG_YELLOW <<"Does he need build ? 0. No 1. Yes" << RESET << std::endl;
     do {
         std::cin >> has_build;
         if ((has_build != 0) && (has_build != 1))
-            std::cout << "Please pick an existing option from the list" << std::endl; 
+            std::cout << BG_RED <<"Please pick an existing option from the list" << RESET <<std::endl; 
     } while((has_build != 0) && (has_build != 1));  
     return has_build;
 }
@@ -148,17 +149,17 @@ void Team_list::displayTeamsByName() {
     this->computePossibleTeams();
 
     // Récupérer le nom du personnages
-    std::cout << "Pick a character you want to see the teams :" << std::endl;
+    std::cout << BG_YELLOW <<"Pick a character you want to see the teams :" << RESET << std::endl;
     std::string character_name;
     std::cin >> character_name;
     
     // Vérifier si le personnage est présent dans la box 
     if (this->checkOwnership(character_name, this->buildPrompt()) == false) {
-        std::cout << "Specified character is not in your team" << std::endl;
+        std::cout << BG_RED <<"Specified character is not in your team" << RESET <<std::endl;
         return;
     }
     if (this->m_teams.size() == 0) {
-        std::cout << "No team matches your characters" << std::endl;
+        std::cout << BG_RED << "No team matches your characters" << RESET <<std::endl;
         return;
     }
     // Parcourir les équipes
@@ -254,4 +255,68 @@ void Team_list::displayTwoTeams(int team1_id, int team2_id) {
     std::cout << "\t\t" << BG_YELLOW << " - PICKED TEAM 2 - " << RESET << "\t\t" << std::endl;
     this->m_teams.at(team2_id).displayTeam();
     std::cout << "\t\t" << BG_YELLOW << " - ############# - " << RESET << "\t\t" << std::endl;
+}
+
+void Team_list::addTeam() {
+    // Nom de l'équipe
+    std::cout << BG_YELLOW << "Choose a team name" << RESET << std::endl;
+    std::string team_name;
+    std::cin >> team_name;
+    // Choix des 4 personnages
+    std::set<std::string> new_team_characters;
+    std::string tampon_character;
+    int cpt = 1;
+    std::cout << BG_YELLOW << "Pick the four characters" << RESET << std::endl;
+    do {
+        std::cout << BG_WHITE << "Character " << cpt << RESET << std::endl;
+        std::cin >> tampon_character;
+        if (this->checkOwnership(tampon_character, 0)) {
+            new_team_characters.insert(tampon_character);
+            // Vérifier si pas en double dans l'équipe
+            if (new_team_characters.size() == cpt) cpt++; 
+        }
+    } while(new_team_characters.size() != 4);
+    // Acquérir la note
+    int note;
+    do {
+        std::cout << BG_YELLOW << "Give it a mark between 0 and 10" << RESET << std::endl;
+        std::cin >> note;
+    } while((note < 0) || (note > 10));
+
+    // Ajout de la nouvelle team au vector de classe
+    String_team new_team;
+    new_team.name = team_name;
+    new_team.note = note;
+    cpt = 0;
+    for (const auto &elem: new_team_characters) {
+        new_team.characters[cpt] = elem;
+        cpt++;
+    }
+    this->m_global_teams.push_back(new_team);
+
+    // Ajout de la nouvelle team au file
+    this->addTeamToFile(new_team);
+}
+
+void Team_list::addTeamToFile(String_team new_team) {
+    std::string file_path = "./datas/global_teams.txt";
+    try {
+        std::ofstream outputFile(file_path, std::ios::app);
+        if(!outputFile.is_open()) {
+            throw std::runtime_error("Unable to open file.");
+        }
+        else {
+            std::string line = new_team.name + "," + 
+                new_team.characters[0] + "," + new_team.characters[1] + "," +
+                new_team.characters[2] + "," + new_team.characters[3] + "," +
+                std::to_string(new_team.note);
+            outputFile << line << std::endl;
+            outputFile.close();
+            std::cout << "Team added to file (" << line << ")" << std::endl; 
+        }
+    } catch (const std::exception& e) {
+        std::cout << "An error occurred: " << e.what() << std::endl;
+    } catch (...) {
+        std::cout << "An unknown error occurred" << std::endl;
+    }
 }

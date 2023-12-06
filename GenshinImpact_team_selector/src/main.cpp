@@ -25,6 +25,10 @@ bool menuSwitch(int choice, Box * box, Team_list * teams)
         break;
     case 6: // Displays teams from one character
         teams->displayTwoTeam();
+        break;
+    case 7: // Add a team to the list
+        teams->addTeam();
+        break;
     default:
         break;
     }
@@ -48,10 +52,11 @@ int main(int argc, char ** argv){
             << BG_WHITE << "3. Remove character from my box         "  << RESET << std::endl
             << BG_WHITE << "4. Display all the teams I can use      " << RESET << std::endl
             << BG_WHITE << "5. Find 1 team from 1 character         " << RESET << std::endl
-            << BG_WHITE << "6. Find 2 team from 2 character         " << RESET <<std::endl;
+            << BG_WHITE << "6. Find 2 team from 2 character         " << RESET <<std::endl
+            << BG_WHITE << "7. Add a team to the database           " << RESET <<std::endl;
         std::cin >> choice;
-        if ((choice < 0) && (choice > 6))
-            std::cout << "Please pick an existing choice from the list" << std::endl;
+        if ((choice < 0) || (choice > 7))
+            std::cout << BG_RED << "Please pick an existing choice from the list" << RESET <<std::endl;
         else 
             result = menuSwitch(choice, my_box, my_teams);
     } while(choice != 0);

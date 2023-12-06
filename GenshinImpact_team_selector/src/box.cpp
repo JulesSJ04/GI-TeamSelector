@@ -141,35 +141,35 @@ void Box::addCharacterToBox() {
     int result = 0;
     this->displayNonAddedCharacters();
     if (this->m_non_added_characters.size() == 0) {
-        std::cout << "You already have all the caracters in your box" << std::endl;
+        std::cout << BG_RED <<"You already have all the caracters in your box" << RESET <<std::endl;
         return; 
     }
-    std::cout << "Choose a character to add in this list :" << std::endl;
+    std::cout << BG_YELLOW <<"Choose a character to add in this list :"<< RESET << std::endl;
     do {
         std::cin >> character_picked;
         result = this->m_non_added_characters.count(character_picked);
         if (result == 0)
-            std::cout << "Please pick an existing character from the list" << std::endl; 
+            std::cout << BG_RED << "Please pick an existing character from the list" << RESET <<std::endl; 
     }while (result == 0);
     // Acquiring its role
     int role; 
-    std::cout << "Choose a role between those role :" << std::endl
+    std::cout << BG_YELLOW << "Choose a role between those role :" << RESET <<std::endl
         << "0. " << roleToString(static_cast<Character_role>(0)) << std::endl
         << "1. " << roleToString(static_cast<Character_role>(1)) << std::endl
         << "2. " << roleToString(static_cast<Character_role>(2)) << std::endl
         << "3. " << roleToString(static_cast<Character_role>(3)) << std::endl;
     do {
         std::cin >> role;
-        if ((role < 0) && (role > 3))
-            std::cout << "Please pick an existing role from the list" << std::endl; 
-    } while((role < 0) && (role > 3));
+        if ((role < 0) || (role > 3))
+            std::cout << BG_RED << "Please pick an existing role from the list" << RESET <<std::endl; 
+    } while((role < 0) || (role > 3));
     // Acquiring if he has build
     int has_build;
-    std::cout << "Has he build ? 0. No 1. Yes" << std::endl;
+    std::cout << BG_YELLOW << "Has he build ? 0. No 1. Yes" << RESET <<std::endl;
     do {
         std::cin >> has_build;
         if ((has_build != 0) && (has_build != 1))
-            std::cout << "Please pick an existing option from the list" << std::endl; 
+            std::cout << BG_RED << "Please pick an existing option from the list" << RESET << std::endl; 
     } while((has_build != 0) && (has_build != 1));
     // Append character to the list
     Character_role r = static_cast<Character_role>(role);

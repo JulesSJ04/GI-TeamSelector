@@ -31,9 +31,10 @@ public:
     void displayTeams();
     void displayTeamsByName();
     void displayTwoTeams(int team1_id, int team2_id);
-
-
     // Select two teams
     int getFirstTeam(std::string character_name);
     void displayTwoTeam();
+    // Team append
+    void addTeam();
+    void addTeamToFile(String_team new_team);
 };
