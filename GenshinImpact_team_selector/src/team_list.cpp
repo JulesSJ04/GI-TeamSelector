@@ -54,6 +54,7 @@ void Team_list::loadTeams() {
 }
 
 void Team_list::computePossibleTeams() {
+    int doublon_cpt = 0;
     for (const auto &elem : this->m_global_teams) {
         bool is_possible = true;
         // Parcourir les 4 noms et vérifier si ils existent
@@ -75,11 +76,12 @@ void Team_list::computePossibleTeams() {
                     this->m_box->getCharacterByName(elem.characters[2]),
                     this->m_box->getCharacterByName(elem.characters[3]),
                     elem.note);
+                this->s_team_id++;
             }
-            this->s_team_id++;
         }
-        
     }
+    std::cout << BG_WHITE << this->m_teams.size() << " / " << this->m_global_teams.size() 
+        << " teams where added from your box" << RESET <<std::endl; 
 }
 
 bool Team_list::isAlreadyAdded(const String_team &team) {
@@ -163,12 +165,17 @@ void Team_list::displayTeamsByName() {
         return;
     }
     // Parcourir les équipes
+    int team_cpt = 0;
     std::cout << "Acquiring possible teams" << std::endl;
     for (auto &elem: this->m_teams) {
         // Vérifier si elles contiennent le personnage
-        if (elem.second.isCharacterInTeam(character_name)) 
+        if (elem.second.isCharacterInTeam(character_name)) {
             elem.second.displayTeam();
+            team_cpt++;
+        }
     }
+    std::cout << BG_WHITE << team_cpt << " teams where found according to your box" << RESET << std::endl;
+
 }
 
 void Team_list::displayTwoTeam() {
@@ -218,6 +225,7 @@ void Team_list::displayTwoTeam() {
         return;
     }
     // Acquérir le choix user
+    std::cout << BG_WHITE << user_input_check.size() << " teams where found according to your box" << RESET << std::endl;
     int picked_team_2 = -1;
     do {
         std::cout << BG_YELLOW << "Pick a team from the displayed list from his number :" << RESET << std::endl;
@@ -242,6 +250,7 @@ int Team_list::getFirstTeam(std::string character_name) {
         }
     }
     // Acquérir le choix user
+    std::cout << BG_WHITE << user_input_check.size() << " teams where found according to your box" << RESET << std::endl;
     do {
         std::cout << BG_YELLOW << "Pick a team from the displayed list from his number :" << RESET << std::endl;
         std::cin >> picked_team;

@@ -40,7 +40,7 @@
 #define BG_BLUE     "\033[44m"
 #define BG_MAGENTA  "\033[45m"
 #define BG_CYAN     "\033[46m"
-#define BG_WHITE    "\033[47m"
+#define BG_WHITE    "\033[47m\033[30m"
 
 inline bool ToF(int value) {
     return value == 1;
