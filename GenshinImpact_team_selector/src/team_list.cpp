@@ -270,7 +270,7 @@ void Team_list::addTeam() {
     do {
         std::cout << BG_WHITE << "Character " << cpt << RESET << std::endl;
         std::cin >> tampon_character;
-        if (this->checkOwnership(tampon_character, 0)) {
+        if(this->m_box->characterExist(tampon_character)) {
             new_team_characters.insert(tampon_character);
             // Vérifier si pas en double dans l'équipe
             if (new_team_characters.size() == cpt) cpt++; 

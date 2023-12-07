@@ -76,3 +76,5 @@ Double-Hydro,HuTao,Xingqiu,Yelan,Zhongli,8
 Shinra-Tensei,Ayaka,Shenhe,Kazuha,Kokomi,7
 Al-hyperbloom,Alhaitham,Nahida,Yelan,Kuki,10
 Raiden-Double-Pyro,Bennett,Raiden,Xianling,Xingqiu,8
+NoelleHyperCarry,Furina,Gorou,Noelle,Yelan,9
+Noelle-Triple-Geo,Albedo,Furina,Gorou,Noelle,8

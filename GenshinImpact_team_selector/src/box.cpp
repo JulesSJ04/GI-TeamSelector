@@ -245,6 +245,11 @@ void Box::removeCharacterFromMyBox(std::string name) {
         std::cerr << "Error opening file: " << filename << std::endl;
         return;
     }
+}
 
-
+bool Box::characterExist(std::string name) {
+    std::unordered_map<std::string,Element>::const_iterator got = this->m_existing_characters.find(name);
+    if(got == this->m_existing_characters.end()) 
+        return false;
+    return true;
 }
