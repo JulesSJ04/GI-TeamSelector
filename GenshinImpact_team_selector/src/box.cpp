@@ -113,17 +113,61 @@ void Box::writeToFile(Character c) {
             std::string line = name + "," + role + "," + element + "," + build;
             outputFile << line << std::endl;
             outputFile.close();
-            std::cout << "Character added to file (" << line << ")" << std::endl; 
+        }
+    } catch (const std::exception& e) {
+        std::cout << "An error occurred: " << e.what() << std::endl;
+    } catch (...) {
+        std::cout << "An unknown error occurred" << std::endl;
+    }  
+}
+
+void Box::writeMultipleCharacterToFile() {
+    std::string file_path = "./datas/my_characters.txt";
+    try {
+        std::ofstream outputFile(file_path, std::ios::app);
+        if(!outputFile.is_open()) {
+            throw std::runtime_error("Unable to open file.");
+        }
+        else {
+            for (auto elem: this->m_characters) {
+                std::string name = elem.second.getName();
+                std::string element = std::to_string(static_cast<int>(elem.second.getElement()));
+                std::string role = std::to_string(static_cast<int>(elem.second.getRole()));
+                std::string build = std::to_string(int(elem.second.hasBuild()));
+                std::string line = name + "," + role + "," + element + "," + build;
+                outputFile << line << std::endl;
+            }
+            outputFile.close();
         }
     } catch (const std::exception& e) {
         std::cout << "An error occurred: " << e.what() << std::endl;
     } catch (...) {
         std::cout << "An unknown error occurred" << std::endl;
     }
-    
 }
 
-void Box::removeCharacterFromMyBox(std::string name) {
+bool Box::resetCharacterFile() {
+    std::string file_path = "./datas/my_characters.txt";
+    try {
+        std::ofstream outputFile(file_path, std::ios::trunc);
+        if (!outputFile.is_open()) {
+            throw std::runtime_error("Unable to open file for reset.");
+        } else {
+            outputFile.close();
+            printSystem("File reset successfully.");
+            return true;
+        }
+    } catch (const std::exception& e) {
+        std::cout << "An error occurred: " << e.what() << std::endl;
+        return false;
+    } catch (...) {
+        std::cout << "An unknown error occurred" << std::endl;
+        return false;
+    }
+    return false;
+}
+
+void Box::removeCharacterFromMyBox() {
     const std::string filename = "./datas/my_characters.txt";
 
     // Read the file into a vector of strings
@@ -132,6 +176,17 @@ void Box::removeCharacterFromMyBox(std::string name) {
         std::cerr << "Error opening file: " << filename << std::endl;
         return;
     }
+}
+
+void Box::updateFileData() {
+    // Reset le file
+    bool is_reset = this->resetCharacterFile();
+    if (!is_reset) {
+        printRestriction(" Update failed ");
+        return;
+    }
+    // Ecrire tous les personnages de nouveau
+    this->writeMultipleCharacterToFile();
 }
 
 /******************************************************************************************************************************
@@ -165,6 +220,13 @@ void Box::displayNonAddedCharacters() const {
     std::cout << std::endl;
 }
 
+void Box::displayPossibleRole() const {
+    std::cout << "0. " << roleToString(static_cast<Character_role>(0)) << std::endl
+        << "1. " << roleToString(static_cast<Character_role>(1)) << std::endl
+        << "2. " << roleToString(static_cast<Character_role>(2)) << std::endl
+        << "3. " << roleToString(static_cast<Character_role>(3)) << std::endl;
+}
+
 /******************************************************************************************************************************
 * BOX MANIPULATION
 ******************************************************************************************************************************/
@@ -189,10 +251,7 @@ void Box::addCharacterToBox() {
     // Acquiring its role
     int role = -1; 
     printMessage<std::string>("Here are the different roles :");
-    std::cout << "0. " << roleToString(static_cast<Character_role>(0)) << std::endl
-        << "1. " << roleToString(static_cast<Character_role>(1)) << std::endl
-        << "2. " << roleToString(static_cast<Character_role>(2)) << std::endl
-        << "3. " << roleToString(static_cast<Character_role>(3)) << std::endl;
+    this->displayPossibleRole();
     do {
         role = inputUser<std::string, int>("Pick an existing role from the list :");
     } while((role < 0) || (role > 3));
@@ -214,7 +273,14 @@ void Box::addCharacterToBox() {
     printMessage<std::string>("Successfully added " + character_picked + " to the list ");
 }
 
-bool Box::resetBox(){
+void Box::resetBox(){
+    // Verify
+    int check = -1; 
+    do {
+        check = inputUser<std::string, int>("Are you sure you want to delete your box ? 0. No 1. Yes");
+    } while((check != 0) || (check !=1));
+    if (check == 0)     
+        return;
     try {
         this->m_characters.clear();
         if (this->m_characters.empty() != true)
@@ -222,12 +288,52 @@ bool Box::resetBox(){
     }
     catch (const std::exception& e) {
         std::cout << "An error occurred: " << e.what() << std::endl;
-        return false;
+        return;
     } catch (...) {
         std::cout << "An unknown error occurred" << std::endl;
-        return false;
+        return;
     }
-    return true;
+    bool delete_file = this->resetCharacterFile();
+    if (delete_file)
+        printRestriction<std::string>("All the characters were deleted from your box");        
+}
+
+void Box::updateCharacterData(int rank) {
+    // Ask for the character to be modified
+    std::string char_name = inputUser<std::string, std::string>("Pick a character to be modified");
+    bool has_character = this->hasCharacter(char_name, 0);
+    if (!has_character) {
+        printRestriction("You don't have the specified character in your box");
+        return;
+    }
+    if (rank == 0) {
+        // Remove it from box
+        this->m_characters.erase(char_name);
+        this->updateFileData();
+        this->m_non_added_characters.insert(char_name);
+        printMessage(char_name + " was successfully removed from your box");
+    } else if (rank == 1) {
+        // Role manipulation
+        this->displayPossibleRole();
+        int new_role = -1;
+        do {
+            new_role = inputUser<std::string, int>("Choose a new role for your character : ");
+        } while ((new_role < 0) || (new_role > 3));
+        this->m_characters.at(char_name).setRole(static_cast<Character_role>(new_role));
+        this->updateFileData();
+        printMessage(char_name + " role was successfully updated from your box");     
+    } else if (rank == 3) {
+        // Build manipulation
+        int has_build;
+        do {
+            has_build = inputUser<std::string, int>("Has he build ? 0. No 1. Yes" ); 
+        } while((has_build != 0) && (has_build != 1));
+        this->m_characters.at(char_name).setHasBuild(ToF(has_build));
+        this->updateFileData();
+        printMessage(char_name + " build was successfully updated from your box");
+    } else {
+        printRestriction<std::string>("No matching option");
+    }
 }
 
 
@@ -254,6 +360,7 @@ Character Box::getCharacterByName(std::string name) {
 ******************************************************************************************************************************/
 
 bool Box::hasCharacter(std::string name, int build) {
+    // 0 = no build, 1 = build needed
     bool name_presence = ToF(this->m_characters.count(name));
     if (build == 1) {
         if (name_presence) {

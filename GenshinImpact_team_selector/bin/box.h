@@ -12,22 +12,27 @@ private:
     bool m_got_loaded;
 public:
     Box();
-    virtual ~Box() {this->m_got_loaded = this->resetBox();}
+    virtual ~Box() {}
 
     // FILE MANIPULATION
     void writeToFile(Character c);
     void loadExistingCharacters();
+    void writeMultipleCharacterToFile();
+    bool resetCharacterFile();
     bool loadCharacters();
-    void removeCharacterFromMyBox(std::string name);
+    void updateFileData();
 
     // DISPLAYS
     void displayBox() const;
     void displayExistingCharacters() const;
     void displayNonAddedCharacters() const;
+    void displayPossibleRole() const;
 
     // BOX MANIPULATION
     void addCharacterToBox();
-    bool resetBox();
+    void removeCharacterFromMyBox();
+    void updateCharacterData(int rank);
+    void resetBox();
 
     // GETTERS AND SETTERS
     void getCharacterDifference();
@@ -36,15 +41,7 @@ public:
     // DATA CHECK
     bool hasCharacter(std::string c, int build);
     bool characterExist(std::string name);
-    
-    // Character adding
-    
-    
-    // Box modifying
-    
 
-    
-    
 };
 
 #endif
