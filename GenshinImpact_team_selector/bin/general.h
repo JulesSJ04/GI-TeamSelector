@@ -10,6 +10,7 @@
 #include <sstream>
 #include <cstring>
 #include <unordered_map>
+#include <map>
 
 #define MAX_PATH_LENGTH 100
 #define TEAM_SIZE 4
@@ -68,5 +69,35 @@ enum Element{
 
 std::string elementToString(Element elem);
 std::string roleToString(Character_role role);
+
+/* Display methods */
+template<class T> 
+void printRestriction(const T& data) {
+    std::cout << BG_RED << data << RESET << std::endl;
+} 
+
+template<class T>
+void printMessage(const T& data) {
+    std::cout << BG_WHITE << " " << data << RESET << std::endl;
+}
+
+template<class T>
+void printSystem(const T& data) {
+    std::cout << data << std::endl;
+}
+
+template<class T>
+void printTitle(const T& data) {
+    std::cout << BG_BLUE << WHITE << data << RESET << std::endl;
+}
+
+template<class T, class U>
+U inputUser(const T& message) {
+    U user_input;
+    std::cout << BG_CYAN << message << RESET << BOLD_BLUE<< std::endl;
+    std::cin >> user_input;
+    std::cout << RESET;
+    return user_input;
+}
 
 #endif

@@ -27,10 +27,13 @@ public :
         m_names.push_back(m_team[3].getName());
         return m_names;
     }
-
-    // Display
-    void displayTeam() const;
+    
+    // CHECK
     bool isCharacterInTeam(std::string character_name);
+
+    // DISPLAYS
+    void displayTeam() const;
+    
 
 };
 

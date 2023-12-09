@@ -14,24 +14,34 @@ public:
     Box();
     virtual ~Box() {this->m_got_loaded = this->resetBox();}
 
-    bool resetBox();
-    // Displays
+    // FILE MANIPULATION
+    void writeToFile(Character c);
+    void loadExistingCharacters();
+    bool loadCharacters();
+    void removeCharacterFromMyBox(std::string name);
+
+    // DISPLAYS
     void displayBox() const;
     void displayExistingCharacters() const;
     void displayNonAddedCharacters() const;
-    // Containers loading
-    void loadExistingCharacters();
-    bool loadCharacters();
+
+    // BOX MANIPULATION
+    void addCharacterToBox();
+    bool resetBox();
+
+    // GETTERS AND SETTERS
     void getCharacterDifference();
-    // Used for team filling
+    Character getCharacterByName(std::string name);
+
+    // DATA CHECK
     bool hasCharacter(std::string c, int build);
     bool characterExist(std::string name);
-    Character getCharacterByName(std::string name);
+    
     // Character adding
-    void addCharacterToBox();
-    void writeToFile(Character c);
+    
+    
     // Box modifying
-    void removeCharacterFromMyBox(std::string name);
+    
 
     
     
