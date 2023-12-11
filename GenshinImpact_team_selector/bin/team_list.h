@@ -36,10 +36,21 @@ public:
 
     // TEAM DISPLAY FROM NAME
     void displayTeamsByName(bool is_double_choice = false);
-    int getFirstTeam(std::string character_name);
+    
+    template<class T>
+    int getFirstTeam(T data, bool need_mainDPS = false);
+
     int getSecondTeam(int team_1_id, std::string character_name);
+
+    // TEAM DISPLAY FROM ELEMENT
+    void displayTeamsByElement(bool is_double_choice = false);
+    void getFirstTeamElement(Element character_element);
 
     // USEFUL METHODS
     void addTeam();
     int buildPrompt();
+    bool mainDpsPrompt();
+
+    template<class T>
+    bool isCharacterInTeamCondition(Team& team, T data); 
 };

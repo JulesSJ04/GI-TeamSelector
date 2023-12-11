@@ -71,7 +71,7 @@ void Team_list::addTeamToFile(String_team new_team) {
                 std::to_string(new_team.note);
             outputFile << line << std::endl;
             outputFile.close();
-            std::cout << "Team added to file (" << line << ")" << std::endl; 
+            printSystem<std::string>("Team added to file (" + line + ")"); 
         }
     } catch (const std::exception& e) {
         std::cout << "An error occurred: " << e.what() << std::endl;
@@ -199,7 +199,7 @@ void Team_list::displayTeamsByName(bool is_double_choice) {
     }
 
     // Récupérer l'ID de la team 1 et l'afficher si mode 1 team
-    int team_one_id = this->getFirstTeam(character_name);
+    int team_one_id = this->getFirstTeam<std::string>(character_name);
     if (!is_double_choice) {
         printTitle<std::string>(" ---------------------- PICKED TEAM 1 ---------------------- ");
         this->m_teams.at(team_one_id).displayTeam();
@@ -219,14 +219,15 @@ void Team_list::displayTeamsByName(bool is_double_choice) {
         this->displayTwoTeams(team_one_id, team_two_id);
 }
 
-int Team_list::getFirstTeam(std::string character_name) {
+template<class T>
+int Team_list::getFirstTeam(T data, bool need_mainDPS) {
     std::cout << BG_WHITE << "Consider this list of teams" << RESET << std::endl;
     std::set<int> user_input_check;
     int picked_team = -1;
     // Parcourir les équipes
     for (auto &elem: this->m_teams) {
         // Vérifier si elles contiennent le personnage
-        if (elem.second.isCharacterInTeam(character_name))  
+        if (this->isCharacterInTeamCondition(elem.second,data))  
         {
             std::cout << " " << PURPLE << elem.first << RESET << " ";
             elem.second.displayTeam();
@@ -272,22 +273,48 @@ int Team_list::getSecondTeam(int team_one_id, std::string character_name) {
 }
 
 /******************************************************************************************************************************
+* TEAM DISPLAY FROM NAME
+******************************************************************************************************************************/
+
+void Team_list::displayTeamsByElement(bool is_double_choice) {
+    //Vérifier que les teams sont à jour
+    this->computePossibleTeams();
+    // Vérifier que des équipes sont réalisables
+    if (this->m_teams.size() == 0) {
+        printRestriction<std::string>("No team matches your characters");
+        return;
+    }
+    // Acquérir l'élement voulu
+    int picked_element = -1;
+    printMessage<std::string>("Choose an element from the following elements :");
+    displayPossibleElement();
+    do {
+        picked_element = inputUser<std::string, int>("Your choice :");
+    } while ((picked_element < 0 ) || (picked_element > 7));
+
+    // Récupérer l'ID de la team 1 et l'afficher si mode 1 team
+    int team_one_id = this->getFirstTeam<int>(picked_element, this->mainDpsPrompt());
+    if (!is_double_choice) {
+        printTitle<std::string>(" ---------------------- PICKED TEAM 1 ---------------------- ");
+        this->m_teams.at(team_one_id).displayTeam();
+        return;
+    }
+}
+
+/******************************************************************************************************************************
 * USEFUL METHODS
 ******************************************************************************************************************************/
 
 void Team_list::addTeam() {
     // Nom de l'équipe
-    std::cout << BG_YELLOW << "Choose a team name" << RESET << std::endl;
-    std::string team_name;
-    std::cin >> team_name;
+    std::string team_name = inputUser<std::string, std::string>("Choose a team name");
     // Choix des 4 personnages
     std::set<std::string> new_team_characters;
     std::string tampon_character;
     int cpt = 1;
-    std::cout << BG_YELLOW << "Pick the four characters" << RESET << std::endl;
+    printMessage<std::string>("Pick the four characters");
     do {
-        std::cout << BG_WHITE << "Character " << cpt << RESET << std::endl;
-        std::cin >> tampon_character;
+        tampon_character = inputUser<std::string, std::string>(" Character " + std::to_string(cpt) + " : ");
         if(this->m_box->characterExist(tampon_character)) {
             new_team_characters.insert(tampon_character);
             // Vérifier si pas en double dans l'équipe
@@ -297,8 +324,7 @@ void Team_list::addTeam() {
     // Acquérir la note
     int note;
     do {
-        std::cout << BG_YELLOW << "Give it a mark between 0 and 10" << RESET << std::endl;
-        std::cin >> note;
+        note = inputUser<std::string, int>("Give it a mark between 0 and 10");
     } while((note < 0) || (note > 10));
 
     // Ajout de la nouvelle team au vector de classe
@@ -325,4 +351,30 @@ int Team_list::buildPrompt() {
             printRestriction("Please pick an existing option from the list");
     } while((has_build != 0) && (has_build != 1));  
     return has_build;
+}
+
+bool Team_list::mainDpsPrompt() {
+    int need_mainDPS;
+    do {
+        need_mainDPS = inputUser<std::string, int>("Does the character need to be a main DPS ? 0. No 1. Yes");
+        if ((need_mainDPS != 0) && (need_mainDPS != 1))
+            printRestriction("Please pick an existing option from the list");
+    } while((need_mainDPS != 0) && (need_mainDPS != 1));
+    if(need_mainDPS == 0) 
+        return false;
+    return true;
+}
+
+template<class T>
+bool Team_list::isCharacterInTeamCondition(Team& team, T data)
+{
+    if constexpr (std::is_same_v<T, int>) {
+        return team.isCharacterElement(static_cast<Element>(data));
+    } else if constexpr (std::is_same_v<T, std::string>) {
+        return team.isCharacterInTeam(data);
+    } else {
+        // Handle unsupported types
+        static_assert(std::is_same_v<T, int> || std::is_same_v<T, std::string>, "Unsupported type");
+        return false;
+    }
 }

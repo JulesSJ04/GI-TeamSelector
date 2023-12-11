@@ -220,13 +220,6 @@ void Box::displayNonAddedCharacters() const {
     std::cout << std::endl;
 }
 
-void Box::displayPossibleRole() const {
-    std::cout << "0. " << roleToString(static_cast<Character_role>(0)) << std::endl
-        << "1. " << roleToString(static_cast<Character_role>(1)) << std::endl
-        << "2. " << roleToString(static_cast<Character_role>(2)) << std::endl
-        << "3. " << roleToString(static_cast<Character_role>(3)) << std::endl;
-}
-
 /******************************************************************************************************************************
 * BOX MANIPULATION
 ******************************************************************************************************************************/
@@ -251,7 +244,7 @@ void Box::addCharacterToBox() {
     // Acquiring its role
     int role = -1; 
     printMessage<std::string>("Here are the different roles :");
-    this->displayPossibleRole();
+    displayPossibleRole();
     do {
         role = inputUser<std::string, int>("Pick an existing role from the list :");
     } while((role < 0) || (role > 3));
@@ -314,7 +307,7 @@ void Box::updateCharacterData(int rank) {
         printMessage(char_name + " was successfully removed from your box");
     } else if (rank == 1) {
         // Role manipulation
-        this->displayPossibleRole();
+        displayPossibleRole();
         int new_role = -1;
         do {
             new_role = inputUser<std::string, int>("Choose a new role for your character : ");

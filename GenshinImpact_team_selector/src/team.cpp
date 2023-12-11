@@ -25,3 +25,11 @@ bool Team::isCharacterInTeam(std::string character_name) {
     return false;
 }
 
+bool Team::isCharacterElement(Element elem) {
+    bool has_character = false;
+    for (unsigned int i = 0; i < TEAM_SIZE ; i++) {
+        if (elem == this->m_team[i].getElement())
+            return true;
+    }
+    return false;
+}

@@ -26,7 +26,6 @@ public:
     void displayBox() const;
     void displayExistingCharacters() const;
     void displayNonAddedCharacters() const;
-    void displayPossibleRole() const;
 
     // BOX MANIPULATION
     void addCharacterToBox();

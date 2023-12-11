@@ -72,6 +72,9 @@ void menuSwitch(int choice, Box * box, Team_list * teams)
     case 7: // Displays teams from one character
         teams->displayTeamsByName(true);
         break;
+    case 8: // Displays teams from one element
+        teams->displayTeamsByElement();
+        break;
     default:
         printRestriction<std::string>("Not implemented yet");
         break;

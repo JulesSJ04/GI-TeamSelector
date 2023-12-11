@@ -69,6 +69,8 @@ enum Element{
 
 std::string elementToString(Element elem);
 std::string roleToString(Character_role role);
+void displayPossibleRole();
+void displayPossibleElement();
 
 /* Display methods */
 template<class T> 

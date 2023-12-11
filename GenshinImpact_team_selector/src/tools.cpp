@@ -34,3 +34,22 @@ std::string roleToString(Character_role role) {
         default: return "Unknown Role";
     }
 }
+
+/*
+* @brief display all the possible role a character can have
+*/
+void displayPossibleRole() {
+    std::cout << "0. " << roleToString(static_cast<Character_role>(0)) << std::endl
+        << "1. " << roleToString(static_cast<Character_role>(1)) << std::endl
+        << "2. " << roleToString(static_cast<Character_role>(2)) << std::endl
+        << "3. " << roleToString(static_cast<Character_role>(3)) << std::endl;
+}
+
+/*
+* @brief display all the possible role a character can have
+*/
+void displayPossibleElement() {
+    for (unsigned int i = 0; i < 8; i++) {
+        std::cout << std::to_string(i) << ". " << elementToString(static_cast<Element>(i)) << std::endl; 
+    }
+}
