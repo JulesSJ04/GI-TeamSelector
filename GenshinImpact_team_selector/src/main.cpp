@@ -75,6 +75,9 @@ void menuSwitch(int choice, Box * box, Team_list * teams)
     case 8: // Displays teams from one element
         teams->displayTeamsByElement();
         break;
+    case 9: // Displays 2 teams from 2 elements
+        teams->displayTeamsByElement(true);
+        break;
     default:
         printRestriction<std::string>("Not implemented yet");
         break;
@@ -98,6 +101,7 @@ int main(int argc, char ** argv){
         "Find 2 teams from 2 characters name         ",
         "Find 1 team from 1 character element        ",
         "Find 2 teams from 2 characters element      ",
+        "Get a random team                           ",
         "Get some statistics                        "
     };
 
@@ -111,7 +115,7 @@ int main(int argc, char ** argv){
             printMessage<std::string>(std::to_string(i) + ". " + menu_options.at(i));
         }
         choice = inputUser<std::string, int>("Choose a listed option from the menu");
-        if ((choice < 0) || (choice > menu_options.size()))
+        if ((choice < 0) || (choice > menu_options.size() - 1))
             printRestriction<std::string>("Please pick an existing choice from the list");
         else 
             menuSwitch(choice, my_box, my_teams);

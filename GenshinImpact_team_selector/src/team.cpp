@@ -25,11 +25,18 @@ bool Team::isCharacterInTeam(std::string character_name) {
     return false;
 }
 
-bool Team::isCharacterElement(Element elem) {
+bool Team::isCharacterElement(Element elem, bool isMainDPS) {
     bool has_character = false;
     for (unsigned int i = 0; i < TEAM_SIZE ; i++) {
-        if (elem == this->m_team[i].getElement())
-            return true;
+        if (isMainDPS) {
+            if ((this->m_team[i].getRole() == static_cast<Character_role>(0)) && (elem == this->m_team[i].getElement())) {
+                return true;
+            }
+        }  
+        else {
+            if (elem == this->m_team[i].getElement())
+                return true;
+        }   
     }
     return false;
 }

@@ -201,7 +201,7 @@ void Team_list::displayTeamsByName(bool is_double_choice) {
     // Récupérer l'ID de la team 1 et l'afficher si mode 1 team
     int team_one_id = this->getFirstTeam<std::string>(character_name);
     if (!is_double_choice) {
-        printTitle<std::string>(" ---------------------- PICKED TEAM 1 ---------------------- ");
+        printTitle<std::string>(" ---------------------- PICKED TEAM ---------------------- ");
         this->m_teams.at(team_one_id).displayTeam();
         return;
     }
@@ -214,20 +214,71 @@ void Team_list::displayTeamsByName(bool is_double_choice) {
         printRestriction<std::string>("Specified character is not in your team");
         return;
     }
-    int team_two_id = this->getSecondTeam(team_one_id, second_character_name);
+    int team_two_id = this->getSecondTeam<std::string>(team_one_id, second_character_name);
     if (team_two_id!=-1) 
         this->displayTwoTeams(team_one_id, team_two_id);
 }
 
+/******************************************************************************************************************************
+* TEAM DISPLAY FROM ELEMENT
+******************************************************************************************************************************/
+
+void Team_list::displayTeamsByElement(bool is_double_choice) {
+    //Vérifier que les teams sont à jour
+    this->computePossibleTeams();
+    // Vérifier que des équipes sont réalisables
+    if (this->m_teams.size() == 0) {
+        printRestriction<std::string>("No team matches your characters");
+        return;
+    }
+    // Acquérir l'élement voulu
+    int picked_element = -1;
+    printMessage<std::string>("Choose an element from the following elements :");
+    displayPossibleElement();
+    do {
+        picked_element = inputUser<std::string, int>("Your choice :");
+    } while ((picked_element < 0 ) || (picked_element > 7));
+
+    // Récupérer l'ID de la team 1 et l'afficher si mode 1 team
+    int team_one_id = this->getFirstTeam<int>(picked_element);
+    if (!is_double_choice) {
+        printTitle<std::string>(" ---------------------- PICKED TEAM ---------------------- ");
+        this->m_teams.at(team_one_id).displayTeam();
+        return;
+    }
+
+    // Récupérer l'ID de la team 2
+    printMessage<std::string>("Choose an element from the following elements :");
+    displayPossibleElement();
+    do {
+        picked_element = inputUser<std::string, int>("Your choice :");
+    } while ((picked_element < 0 ) || (picked_element > 7));
+
+    int team_two_id = this->getSecondTeam<int>(team_one_id, picked_element);
+    if (team_two_id!=-1) 
+        this->displayTwoTeams(team_one_id, team_two_id);
+}
+
+/******************************************************************************************************************************
+* GET TEAMS
+******************************************************************************************************************************/
+
 template<class T>
-int Team_list::getFirstTeam(T data, bool need_mainDPS) {
+int Team_list::getFirstTeam(T data) {
+
+    // Si selon élement, demander si main dps
+    bool main_dps = false;
+    if constexpr (std::is_same_v<T, int>) {
+        main_dps = this->mainDpsPrompt();
+    }
     std::cout << BG_WHITE << "Consider this list of teams" << RESET << std::endl;
     std::set<int> user_input_check;
     int picked_team = -1;
+    
     // Parcourir les équipes
     for (auto &elem: this->m_teams) {
         // Vérifier si elles contiennent le personnage
-        if (this->isCharacterInTeamCondition(elem.second,data))  
+        if (this->isCharacterInTeamCondition(elem.second,data,main_dps))  
         {
             std::cout << " " << PURPLE << elem.first << RESET << " ";
             elem.second.displayTeam();
@@ -242,14 +293,20 @@ int Team_list::getFirstTeam(T data, bool need_mainDPS) {
     return picked_team;
 }
 
-int Team_list::getSecondTeam(int team_one_id, std::string character_name) {
+template<class T>
+int Team_list::getSecondTeam(int team_one_id, T data) {
+    // Si selon élement, demander si main dps
+    bool main_dps = false;
+    if constexpr (std::is_same_v<T, int>) {
+        main_dps = this->mainDpsPrompt();
+    }
     // Etape 1 : Récupérer les 4 noms de l'équipe choisie
     std::vector<std::string> four_picked_character = this->m_teams.at(team_one_id).getNames();
     std::set<int> user_input_check;
     // Etape 2 : parcourir les équipes
     for (auto &elem: this->m_teams) {
         // Vérifier si elles contiennent le personnage
-        if (elem.second.isCharacterInTeam(character_name))  
+        if (this->isCharacterInTeamCondition(elem.second,data,main_dps))  
         {
             // Vérifier si l'un des 4 personnages n'est pas déjà dans une équipe 
             if (!this->isAlreadyUsed(elem.first, four_picked_character)) {
@@ -272,34 +329,6 @@ int Team_list::getSecondTeam(int team_one_id, std::string character_name) {
     return picked_team_2; 
 }
 
-/******************************************************************************************************************************
-* TEAM DISPLAY FROM NAME
-******************************************************************************************************************************/
-
-void Team_list::displayTeamsByElement(bool is_double_choice) {
-    //Vérifier que les teams sont à jour
-    this->computePossibleTeams();
-    // Vérifier que des équipes sont réalisables
-    if (this->m_teams.size() == 0) {
-        printRestriction<std::string>("No team matches your characters");
-        return;
-    }
-    // Acquérir l'élement voulu
-    int picked_element = -1;
-    printMessage<std::string>("Choose an element from the following elements :");
-    displayPossibleElement();
-    do {
-        picked_element = inputUser<std::string, int>("Your choice :");
-    } while ((picked_element < 0 ) || (picked_element > 7));
-
-    // Récupérer l'ID de la team 1 et l'afficher si mode 1 team
-    int team_one_id = this->getFirstTeam<int>(picked_element, this->mainDpsPrompt());
-    if (!is_double_choice) {
-        printTitle<std::string>(" ---------------------- PICKED TEAM 1 ---------------------- ");
-        this->m_teams.at(team_one_id).displayTeam();
-        return;
-    }
-}
 
 /******************************************************************************************************************************
 * USEFUL METHODS
@@ -366,10 +395,10 @@ bool Team_list::mainDpsPrompt() {
 }
 
 template<class T>
-bool Team_list::isCharacterInTeamCondition(Team& team, T data)
+bool Team_list::isCharacterInTeamCondition(Team& team, T data, bool is_main_dps)
 {
     if constexpr (std::is_same_v<T, int>) {
-        return team.isCharacterElement(static_cast<Element>(data));
+        return team.isCharacterElement(static_cast<Element>(data), is_main_dps);
     } else if constexpr (std::is_same_v<T, std::string>) {
         return team.isCharacterInTeam(data);
     } else {

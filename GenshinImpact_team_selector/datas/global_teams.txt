@@ -140,3 +140,12 @@ Nomade-Driver,Layla,Nomade,Xingqiu,Yelan,6
 Nomade-Tazer,Fischl,Nomade,Xingqiu,Yelan,7
 Nomade-Tazer,Beidou,Fischl,Nomade,Xingqiu,7
 Nomade-Hyperbloom,Kuki,Nahida,Nomade,Xingqiu,6
+Shinra-Tensei,Ayaka,Kazuha,Kokomi,Shenhe,8
+Shinra-Tensei,Ayaka,Kokomi,Shenhe,Sucrose,7
+Shinra-Tensei,Ayaka,Ganyu,Kazuha,Kokomi,8
+Shinra-Tensei,Ayaka,Ganyu,Kazuha,Mona,7
+Shinra-Tensei,Ayaka,Diona,Kazuha,Mona,6
+Shinra-Tensei,Ayaka,Barbara,Ganyu,Kazuha,7
+Mono-Cryo,Ayaka,Ganyu,Kazuha,Shenhe,8
+Aya-Reverse-Melt,Ayaka,Bennett,Kazuha,Nahida,7
+Hyper-freedge,Ayaka,Kuki,Nahida,Xingqiu,8

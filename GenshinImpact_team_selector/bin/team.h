@@ -30,7 +30,7 @@ public :
     
     // CHECK
     bool isCharacterInTeam(std::string character_name);
-    bool isCharacterElement(Element elem);
+    bool isCharacterElement(Element elem, bool isMainDPS);
 
     // DISPLAYS
     void displayTeam() const;
