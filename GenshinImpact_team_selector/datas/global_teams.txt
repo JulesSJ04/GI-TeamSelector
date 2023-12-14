@@ -121,10 +121,10 @@ Meltyu,Bennett,Ganyu,Kazuha,Zhongli,6
 Meltyu,Bennett,Ganyu,Nahida,Zhongli,7
 Freeze,Ayaka,Ganyu,Kazuha,Kokomi,8
 RaidenHyperPyro,Bennett,Raiden,Sara,Xianling,8
-Wrio-Hyperfreedge,Wriothesley,Nahida,Xingqiu, Kuki,8
+Wrio-Hyperfreedge,Wriothesley,Nahida,Xingqiu,Kuki,8
 Wrio-Oven-Burgeon,Wriothesley,Xingqiu,Thomas,Nahida,6
-Wrio-Burn,Wriothesley,Wriothesley,Nahida,Bennett,Thomas,7
-Wrio-Burn,Wriothesley,Wriothesley,Nahida,Bennett,Dehya,7
+Wrio-Burn,Wriothesley,Nahida,Bennett,Thomas,7
+Wrio-Burn,Wriothesley,Nahida,Bennett,Dehya,7
 Wrio-Reverse-Melt,Wriothesley,Kazuha,Xianling,Bennett,7
 Wrio-Freeze,Wriothesley,Xingqiu,Yelan,Kazuha,8
 Wrio-Freeze,Wriothesley,Shenhe,Yelan,Kazuha,8

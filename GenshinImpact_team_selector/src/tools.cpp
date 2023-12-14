@@ -1,5 +1,6 @@
 #include "general.h"
-
+#include "box.h"
+#include "team_list.h"
 
 /*
 * @brief convert Element variable type to string
@@ -53,3 +54,5 @@ void displayPossibleElement() {
         std::cout << std::to_string(i) << ". " << elementToString(static_cast<Element>(i)) << std::endl; 
     }
 }
+
+
