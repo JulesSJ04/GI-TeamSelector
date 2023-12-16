@@ -194,7 +194,9 @@ void Box::updateFileData() {
 ******************************************************************************************************************************/
 
 void Box::displayBox() const {
+    clear_console();
     if (this->m_characters.empty() != true){
+        printTitle<std::string>("################## --- BOX --- ##################");
         for (const auto& elem: this->m_characters){
             elem.second.displayCharacter();
         }

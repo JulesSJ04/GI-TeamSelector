@@ -9,6 +9,7 @@
 #include <fstream>
 #include <sstream>
 #include <cstring>
+#include <cstdlib>
 #include <unordered_map>
 #include <map>
 
@@ -71,6 +72,7 @@ std::string elementToString(Element elem);
 std::string roleToString(Character_role role);
 void displayPossibleRole();
 void displayPossibleElement();
+void clear_console();
 
 /* Display methods */
 template<class T> 

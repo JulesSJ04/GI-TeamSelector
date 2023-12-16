@@ -29,7 +29,7 @@ public :
     }
     
     // CHECK
-    bool isCharacterInTeam(std::string character_name);
+    bool isCharacterInTeam(std::string character_name, bool need_build);
     bool isCharacterElement(Element elem, bool isMainDPS);
 
     // DISPLAYS

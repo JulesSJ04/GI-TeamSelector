@@ -149,3 +149,16 @@ Shinra-Tensei,Ayaka,Barbara,Ganyu,Kazuha,7
 Mono-Cryo,Ayaka,Ganyu,Kazuha,Shenhe,8
 Aya-Reverse-Melt,Ayaka,Bennett,Kazuha,Nahida,7
 Hyper-freedge,Ayaka,Kuki,Nahida,Xingqiu,8
+Diluc-Hyper,Diluc,Xingqiu,Kazuha,Bennett,8
+Diluc-Hyper,Bennett,Diluc,Kazuha,Yelan,8
+Diluc-hyper,Bennett,Diluc,Sucrose,Xingqiu,7
+HuTao-Fonte,Bennett,Diona,HuTao,Sucrose,6
+HuTao-Double-Geo,Albedo,HuTao,Xingqiu,Zhongli,7
+HuTao-Swirl,Bennett,HuTao,Sucrose,Xingqiu,7
+HuTao-Swirl,Bennett,HuTao,Kazuha,Yelan,8
+HuTao-Swirl,HuTao,Kazuha,Xianling,Xingqiu,8
+HuTao-Swirl,HuTao,Kazuha,Xianling,Yelan,8
+HuTao-Swirl,HuTao,Sucrose,Xianling,Xingqiu,7
+HuTao-Swirl,HuTao,Sucrose,Xianling,Yelan,7
+HuTao-Nationale,HuTao,Xianling,Xingqiu,Yelan,8
+HuTao-MultiElem,Fischl,HuTao,Xingqiu,Zhongli,7

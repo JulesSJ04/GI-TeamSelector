@@ -55,4 +55,19 @@ void displayPossibleElement() {
     }
 }
 
-
+/*
+* @brief clear console
+*/
+void clear_console() {
+    try {
+        int error = std::system("clear");
+        if (error == -1) {
+            throw std::runtime_error("Permission denied to clear the system");
+        }
+    } catch (const std::exception& e) {
+        std::cout << "An error occurred: " << e.what() << std::endl;
+    }
+    catch (...) {
+        std::cout << "Couldn't clear" << std::endl;
+    }
+}

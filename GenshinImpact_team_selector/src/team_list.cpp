@@ -170,6 +170,7 @@ void Team_list::displayTeams() {
 }
 
 void Team_list::displayTwoTeams(int team1_id, int team2_id) {
+    clear_console();
     printTitle<std::string>(" ---------------------- PICKED TEAM 1 ---------------------- ");
     this->m_teams.at(team1_id).displayTeam();
     printTitle<std::string>(" ---------------------- PICKED TEAM 2 ---------------------- ");
@@ -193,14 +194,16 @@ void Team_list::displayTeamsByName(bool is_double_choice) {
     // Récupérer le nom du personnages
     std::string character_name = inputUser<std::string, std::string>("Pick a character you want to see the teams :");    
     // Vérifier si le personnage est présent dans la box 
-    if (this->checkOwnership(character_name, this->buildPrompt()) == false) {
+    bool has_build = this->buildPrompt();
+    if (this->checkOwnership(character_name, has_build) == false) {
         printRestriction<std::string>("Specified character is not in your team");
         return;
     }
 
     // Récupérer l'ID de la team 1 et l'afficher si mode 1 team
-    int team_one_id = this->getFirstTeam<std::string>(character_name);
+    int team_one_id = this->getFirstTeam<std::string>(character_name, has_build);
     if (!is_double_choice) {
+        clear_console();
         printTitle<std::string>(" ---------------------- PICKED TEAM ---------------------- ");
         this->m_teams.at(team_one_id).displayTeam();
         return;
@@ -210,11 +213,11 @@ void Team_list::displayTeamsByName(bool is_double_choice) {
     // Récupérer le nom du personnages
     std::string second_character_name = inputUser<std::string, std::string>("Pick a character you want to see the teams :");    
     // Vérifier si le personnage est présent dans la box 
-    if (this->checkOwnership(second_character_name, this->buildPrompt()) == false) {
+    if (this->checkOwnership(second_character_name, has_build) == false) {
         printRestriction<std::string>("Specified character is not in your team");
         return;
     }
-    int team_two_id = this->getSecondTeam<std::string>(team_one_id, second_character_name);
+    int team_two_id = this->getSecondTeam<std::string>(team_one_id, second_character_name, has_build);
     if (team_two_id!=-1) 
         this->displayTwoTeams(team_one_id, team_two_id);
 }
@@ -240,8 +243,9 @@ void Team_list::displayTeamsByElement(bool is_double_choice) {
     } while ((picked_element < 0 ) || (picked_element > 7));
 
     // Récupérer l'ID de la team 1 et l'afficher si mode 1 team
-    int team_one_id = this->getFirstTeam<int>(picked_element);
+    int team_one_id = this->getFirstTeam<int>(picked_element, true);
     if (!is_double_choice) {
+        clear_console();
         printTitle<std::string>(" ---------------------- PICKED TEAM ---------------------- ");
         this->m_teams.at(team_one_id).displayTeam();
         return;
@@ -254,7 +258,7 @@ void Team_list::displayTeamsByElement(bool is_double_choice) {
         picked_element = inputUser<std::string, int>("Your choice :");
     } while ((picked_element < 0 ) || (picked_element > 7));
 
-    int team_two_id = this->getSecondTeam<int>(team_one_id, picked_element);
+    int team_two_id = this->getSecondTeam<int>(team_one_id, picked_element, true);
     if (team_two_id!=-1) 
         this->displayTwoTeams(team_one_id, team_two_id);
 }
@@ -264,7 +268,7 @@ void Team_list::displayTeamsByElement(bool is_double_choice) {
 ******************************************************************************************************************************/
 
 template<class T>
-int Team_list::getFirstTeam(T data) {
+int Team_list::getFirstTeam(T data, bool need_build) {
 
     // Si selon élement, demander si main dps
     bool main_dps = false;
@@ -278,7 +282,7 @@ int Team_list::getFirstTeam(T data) {
     // Parcourir les équipes
     for (auto &elem: this->m_teams) {
         // Vérifier si elles contiennent le personnage
-        if (this->isCharacterInTeamCondition(elem.second,data,main_dps))  
+        if (this->isCharacterInTeamCondition(elem.second, data, main_dps, need_build))  
         {
             std::cout << " " << PURPLE << elem.first << RESET << " ";
             elem.second.displayTeam();
@@ -294,7 +298,7 @@ int Team_list::getFirstTeam(T data) {
 }
 
 template<class T>
-int Team_list::getSecondTeam(int team_one_id, T data) {
+int Team_list::getSecondTeam(int team_one_id, T data, bool need_build) {
     // Si selon élement, demander si main dps
     bool main_dps = false;
     if constexpr (std::is_same_v<T, int>) {
@@ -306,7 +310,7 @@ int Team_list::getSecondTeam(int team_one_id, T data) {
     // Etape 2 : parcourir les équipes
     for (auto &elem: this->m_teams) {
         // Vérifier si elles contiennent le personnage
-        if (this->isCharacterInTeamCondition(elem.second,data,main_dps))  
+        if (this->isCharacterInTeamCondition(elem.second, data, main_dps, need_build))  
         {
             // Vérifier si l'un des 4 personnages n'est pas déjà dans une équipe 
             if (!this->isAlreadyUsed(elem.first, four_picked_character)) {
@@ -395,15 +399,17 @@ bool Team_list::mainDpsPrompt() {
 }
 
 template<class T>
-bool Team_list::isCharacterInTeamCondition(Team& team, T data, bool is_main_dps)
+bool Team_list::isCharacterInTeamCondition(Team& team, T data, bool is_main_dps, bool need_build)
 {
     if constexpr (std::is_same_v<T, int>) {
         return team.isCharacterElement(static_cast<Element>(data), is_main_dps);
     } else if constexpr (std::is_same_v<T, std::string>) {
-        return team.isCharacterInTeam(data);
+        return team.isCharacterInTeam(data, need_build);
     } else {
         // Handle unsupported types
         static_assert(std::is_same_v<T, int> || std::is_same_v<T, std::string>, "Unsupported type");
         return false;
     }
 }
+
+

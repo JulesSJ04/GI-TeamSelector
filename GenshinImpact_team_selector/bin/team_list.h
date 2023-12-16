@@ -39,12 +39,12 @@ public:
     
     // TEAM DISPLAY FROM ELEMENT
     void displayTeamsByElement(bool is_double_choice = false);
-
+    
     // GET TEAMS
     template<class T>
-    int getFirstTeam(T data);
+    int getFirstTeam(T data, bool need_build);
     template<class T>
-    int getSecondTeam(int team_1_id, T data);
+    int getSecondTeam(int team_1_id, T data, bool need_build);
 
     // USEFUL METHODS
     void addTeam();
@@ -52,5 +52,5 @@ public:
     bool mainDpsPrompt();
 
     template<class T>
-    bool isCharacterInTeamCondition(Team& team, T data, bool is_main_dps); 
+    bool isCharacterInTeamCondition(Team& team, T data, bool is_main_dps, bool need_build); 
 };
