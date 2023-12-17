@@ -18,14 +18,9 @@ int main(int argc, char ** argv){
         "Display characters from my box              ",
         "Add character to my box                     ",
         "Modify my box                               ",
-        "Display all the teams possible              ",
+        "Find a team                                 ",
         "Add a team to the database                  ",
-        "Find 1 team from 1 character name           ",
-        "Find 2 teams from 2 characters name         ",
-        "Find 1 team from 1 character element        ",
-        "Find 2 teams from 2 characters element      ",
-        "Get a random team                          ",
-        "Get some statistics                        "
+        "Get some statistics                         "
     };
 
     // MENU

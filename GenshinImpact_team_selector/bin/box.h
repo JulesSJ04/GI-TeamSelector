@@ -36,6 +36,7 @@ public:
     // GETTERS AND SETTERS
     void getCharacterDifference();
     Character getCharacterByName(std::string name);
+    std::vector<std::string> getCharactersName();
 
     // DATA CHECK
     bool hasCharacter(std::string c, int build);

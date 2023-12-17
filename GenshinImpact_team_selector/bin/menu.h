@@ -6,6 +6,7 @@
 #include "team_list.h"
 
 void menuModify(Box * box);
+void menuTeams(Team_list * teams);
 void menuSwitch(int choice, Box * box, Team_list * teams);
 
 #endif

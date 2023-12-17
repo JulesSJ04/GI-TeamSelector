@@ -350,6 +350,14 @@ Character Box::getCharacterByName(std::string name) {
     return this->m_characters.at(name);
 }
 
+std::vector<std::string> Box::getCharactersName() {
+    std::vector<std::string> name_list;
+    for (const auto &elem: this->m_characters) {
+        name_list.push_back(elem.first);
+    }
+    return name_list;
+}
+
 /******************************************************************************************************************************
 * DATA CHECK
 ******************************************************************************************************************************/

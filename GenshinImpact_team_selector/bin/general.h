@@ -10,6 +10,7 @@
 #include <sstream>
 #include <cstring>
 #include <cstdlib>
+#include <ctime>
 #include <unordered_map>
 #include <map>
 
@@ -97,6 +98,8 @@ void printTitle(const T& data) {
 
 template<class T, class U>
 U inputUser(const T& message) {
+    std::cin.clear();
+    fflush(stdin);
     U user_input;
     std::cout << BG_CYAN << message << RESET << BOLD_BLUE<< std::endl;
     std::cin >> user_input;

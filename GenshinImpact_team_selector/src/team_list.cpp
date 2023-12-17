@@ -148,8 +148,18 @@ bool Team_list::isAlreadyUsed(int team_id, std::vector<std::string> picked_chara
     return false;
 }
 
-bool Team_list::checkOwnership(std::string character_name, int build) {
+bool Team_list::isAlreadyInFirst(std::string name, int team_id) {
+    std::vector<std::string> four_characters_names = this->m_teams.at(team_id).getNames();
+    for (const auto &elem: four_characters_names) {
+        if (elem.compare(name) == 0)
+            return true;
+    }
+    return false;
+}
+
+bool Team_list::checkOwnership(std::string character_name, int build, bool shuffle_mode) {
     if (this->m_box->hasCharacter(character_name, build) == false) {
+        if (shuffle_mode) return false;
         printRestriction<std::string>("The specified character " + character_name + " is not in your box or has not a build : ");
         this->m_box->displayBox();
         return false;
@@ -243,7 +253,8 @@ void Team_list::displayTeamsByElement(bool is_double_choice) {
     } while ((picked_element < 0 ) || (picked_element > 7));
 
     // Récupérer l'ID de la team 1 et l'afficher si mode 1 team
-    int team_one_id = this->getFirstTeam<int>(picked_element, true);
+    bool has_build = this->buildPrompt();
+    int team_one_id = this->getFirstTeam<int>(picked_element, has_build, false);
     if (!is_double_choice) {
         clear_console();
         printTitle<std::string>(" ---------------------- PICKED TEAM ---------------------- ");
@@ -257,8 +268,61 @@ void Team_list::displayTeamsByElement(bool is_double_choice) {
     do {
         picked_element = inputUser<std::string, int>("Your choice :");
     } while ((picked_element < 0 ) || (picked_element > 7));
+    has_build = this->buildPrompt();
+    int team_two_id = this->getSecondTeam<int>(team_one_id, picked_element, has_build);
+    if (team_two_id!=-1) 
+        this->displayTwoTeams(team_one_id, team_two_id);
+}
 
-    int team_two_id = this->getSecondTeam<int>(team_one_id, picked_element, true);
+/******************************************************************************************************************************
+* RANDOM TEAM DISPLAY
+******************************************************************************************************************************/
+
+void Team_list::displayRandomTeams(bool is_double_choice) {
+    this->computePossibleTeams();
+    // Vérifier que des équipes sont réalisables
+    if (this->m_teams.size() == 0) {
+        printRestriction<std::string>("No team matches your characters");
+        return;
+    }
+    bool has_build = this->buildPrompt();
+    int team_one_id = -1;
+    // Acquérir le nom du personnage aléatoirement
+    std::vector<std::string> name_list = this->m_box->getCharactersName();
+    std::string character_name;
+    std::srand(static_cast<unsigned int>(std::time(0)));
+    do {
+        do {
+            int random_index = std::rand() % (name_list.size()-1);
+            character_name = name_list[random_index];
+            printMessage<std::string>("Checking : " + character_name);
+        } while(this->checkOwnership(character_name, has_build, true) == false);
+        printMessage<std::string>("First picked character : " + character_name);
+        // Acquérir la première team
+        team_one_id = this->getFirstTeam<std::string>(character_name, has_build, true);
+        if (team_one_id == -1) {
+            printRestriction<std::string>("Unable to find a team from this character");
+        }
+    } while(team_one_id == -1);
+    
+    if (!is_double_choice) {
+        clear_console();
+        printTitle<std::string>(" ---------------------- PICKED TEAM ---------------------- ");
+        this->m_teams.at(team_one_id).displayTeam();
+        return;
+    }
+
+    printMessage<std::string>(" First team acquired ");
+    // Acquérir le second nom de personnage aléatoirement
+    has_build = this->buildPrompt();
+    std::string second_character_name;
+    do {
+        int random_index = std::rand() % (name_list.size()-1);
+        second_character_name = name_list[random_index];
+    } while((this->checkOwnership(second_character_name, has_build) == false) 
+        || this->isAlreadyInFirst(second_character_name, team_one_id));
+
+    int team_two_id = this->getSecondTeam<std::string>(team_one_id, second_character_name, has_build, true);
     if (team_two_id!=-1) 
         this->displayTwoTeams(team_one_id, team_two_id);
 }
@@ -268,45 +332,67 @@ void Team_list::displayTeamsByElement(bool is_double_choice) {
 ******************************************************************************************************************************/
 
 template<class T>
-int Team_list::getFirstTeam(T data, bool need_build) {
+int Team_list::getFirstTeam(T data, bool need_build, bool shuffle_mode) {
 
     // Si selon élement, demander si main dps
     bool main_dps = false;
-    if constexpr (std::is_same_v<T, int>) {
-        main_dps = this->mainDpsPrompt();
-    }
-    std::cout << BG_WHITE << "Consider this list of teams" << RESET << std::endl;
     std::set<int> user_input_check;
     int picked_team = -1;
+    if (!shuffle_mode) {
+        if constexpr (std::is_same_v<T, int>)
+            main_dps = this->mainDpsPrompt();
+        std::cout << BG_WHITE << "Consider this list of teams" << RESET << std::endl;
+    }
     
     // Parcourir les équipes
     for (auto &elem: this->m_teams) {
         // Vérifier si elles contiennent le personnage
         if (this->isCharacterInTeamCondition(elem.second, data, main_dps, need_build))  
         {
-            std::cout << " " << PURPLE << elem.first << RESET << " ";
-            elem.second.displayTeam();
+            if (!shuffle_mode) {
+                std::cout << " " << PURPLE << elem.first << RESET << " ";
+                elem.second.displayTeam();
+            }
             user_input_check.insert(elem.first);
         }
     }
-    // Acquérir le choix user
-    printMessage<std::string>(std::to_string(user_input_check.size()) + " teams where found according to your box");
-    do {
-        picked_team = inputUser<std::string, int>("Pick a team from the displayed list from his number :");
-    } while(user_input_check.count(picked_team) != 1);
+
+    if (user_input_check.size() == 0) return -1;
+
+    if (!shuffle_mode) {
+        // Acquérir le choix user
+        printMessage<std::string>(std::to_string(user_input_check.size()) + " teams where found according to your box");
+        do {
+            picked_team = inputUser<std::string, int>("Pick a team from the displayed list from his number :");
+        } while(user_input_check.count(picked_team) != 1);
+    } else {
+        // Acquérir un numéro random
+        int random_index = std::rand() % (user_input_check.size()-1);
+        int first_elem = 0;
+        for (const auto &elem: user_input_check) {
+            if (first_elem == random_index) {
+                return elem;
+            }
+            first_elem++;
+        }
+    }
     return picked_team;
 }
 
 template<class T>
-int Team_list::getSecondTeam(int team_one_id, T data, bool need_build) {
-    // Si selon élement, demander si main dps
-    bool main_dps = false;
-    if constexpr (std::is_same_v<T, int>) {
-        main_dps = this->mainDpsPrompt();
-    }
+int Team_list::getSecondTeam(int team_one_id, T data, bool need_build, bool shuffle_mode) {
     // Etape 1 : Récupérer les 4 noms de l'équipe choisie
     std::vector<std::string> four_picked_character = this->m_teams.at(team_one_id).getNames();
     std::set<int> user_input_check;
+    // Si selon élement, demander si main dps
+    bool main_dps = false;
+    int picked_team_2 = 0; 
+
+    if (!shuffle_mode) {
+        if constexpr (std::is_same_v<T, int>)
+            main_dps = this->mainDpsPrompt();
+    }
+    
     // Etape 2 : parcourir les équipes
     for (auto &elem: this->m_teams) {
         // Vérifier si elles contiennent le personnage
@@ -314,8 +400,10 @@ int Team_list::getSecondTeam(int team_one_id, T data, bool need_build) {
         {
             // Vérifier si l'un des 4 personnages n'est pas déjà dans une équipe 
             if (!this->isAlreadyUsed(elem.first, four_picked_character)) {
-                std::cout << " " << PURPLE << elem.first << RESET << " ";
-                elem.second.displayTeam();
+                if (!shuffle_mode) {
+                    std::cout << " " << PURPLE << elem.first << RESET << " ";
+                    elem.second.displayTeam();
+                }
                 user_input_check.insert(elem.first);
             }
         }
@@ -324,12 +412,24 @@ int Team_list::getSecondTeam(int team_one_id, T data, bool need_build) {
         printRestriction<std::string>("You can't pick a second team from your box");
         return -1;
     }
-    printMessage(std::to_string(user_input_check.size()) + " teams where found according to your box");
-    // Acquérir le choix user
-    int picked_team_2 = 0; 
-    do {
-        picked_team_2 = inputUser<std::string, int>("Pick a team from the displayed list from his number :");
-    } while(user_input_check.count(picked_team_2) != 1); 
+    
+    if (!shuffle_mode) {
+        printMessage(std::to_string(user_input_check.size()) + " teams where found according to your box");
+        // Acquérir le choix user
+        do {
+            picked_team_2 = inputUser<std::string, int>("Pick a team from the displayed list from his number :");
+        } while(user_input_check.count(picked_team_2) != 1); 
+    } else {
+        // Acquérir un numéro random
+        int random_index = std::rand() % (user_input_check.size()-1);
+        int first_elem = 0;
+        for (const auto &elem: user_input_check) {
+            if (first_elem == random_index) {
+                return elem;
+            }
+            first_elem++;
+        }
+    }
     return picked_team_2; 
 }
 

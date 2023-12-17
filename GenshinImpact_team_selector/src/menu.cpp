@@ -40,6 +40,57 @@ void menuModify(Box * box) {
 }
 
 /*
+* @brief Team finding options
+*/
+void menuTeams(Team_list * teams) {
+    std::vector<std::string> menu_options = {
+        "Quit                                         ",
+        "Name : 1 team                                ",
+        "Name : 2 teams                               ",
+        "Element : 1 team                             ",
+        "Element : 2 teams                            ",
+        "Random : 1 team                              ",
+        "Random : 2 teams                             ",
+        "Display all teams                            "
+    };
+    for (unsigned int i = 0; i < menu_options.size(); i++) {
+        printMessage<std::string>(std::to_string(i) + ". " + menu_options.at(i));
+    }
+    int choice = 0;
+    do {
+        choice = inputUser<std::string, int>("Pick an option from the displayed one");
+    } while(((choice < 0) || (choice > menu_options.size())));
+    switch (choice)
+    {
+    case 0:
+        return;
+    case 1:
+        teams->displayTeamsByName();
+        break;
+    case 2:
+        teams->displayTeamsByName(true);
+        break;
+    case 3:
+        teams->displayTeamsByElement();
+        break;
+    case 4:
+        teams->displayTeamsByElement(true);
+        break;
+    case 5:
+        teams->displayRandomTeams();
+        break;
+    case 6:
+        teams->displayRandomTeams(true);
+        break;
+    case 7:
+        teams->displayTeams();;
+        break;
+    default:
+        break;
+    } 
+}
+
+/*
 * @brief Link to the different options of the menu
 */
 void menuSwitch(int choice, Box * box, Team_list * teams)
@@ -57,23 +108,11 @@ void menuSwitch(int choice, Box * box, Team_list * teams)
     case 3: // Modify box
         menuModify(box); 
         break;
-    case 4: // Display all the team I can use
-        teams->displayTeams();
+    case 4:
+        menuTeams(teams);
         break;
     case 5: // Add a team to the list
         teams->addTeam();
-        break;
-    case 6: // Displays teams from one character name
-        teams->displayTeamsByName();
-        break;
-    case 7: // Displays teams from one character
-        teams->displayTeamsByName(true);
-        break;
-    case 8: // Displays teams from one element
-        teams->displayTeamsByElement();
-        break;
-    case 9: // Displays 2 teams from 2 elements
-        teams->displayTeamsByElement(true);
         break;
     default:
         printRestriction<std::string>("Not implemented yet");
