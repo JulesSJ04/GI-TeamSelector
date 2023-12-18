@@ -295,14 +295,9 @@ void Team_list::displayRandomTeams(bool is_double_choice) {
         do {
             int random_index = std::rand() % (name_list.size()-1);
             character_name = name_list[random_index];
-            printMessage<std::string>("Checking : " + character_name);
         } while(this->checkOwnership(character_name, has_build, true) == false);
-        printMessage<std::string>("First picked character : " + character_name);
         // Acquérir la première team
         team_one_id = this->getFirstTeam<std::string>(character_name, has_build, true);
-        if (team_one_id == -1) {
-            printRestriction<std::string>("Unable to find a team from this character");
-        }
     } while(team_one_id == -1);
     
     if (!is_double_choice) {
@@ -316,13 +311,17 @@ void Team_list::displayRandomTeams(bool is_double_choice) {
     // Acquérir le second nom de personnage aléatoirement
     has_build = this->buildPrompt();
     std::string second_character_name;
+    int team_two_id = -1;
     do {
-        int random_index = std::rand() % (name_list.size()-1);
-        second_character_name = name_list[random_index];
-    } while((this->checkOwnership(second_character_name, has_build) == false) 
-        || this->isAlreadyInFirst(second_character_name, team_one_id));
+        do {
+            int random_index = std::rand() % (name_list.size()-1);
+            second_character_name = name_list[random_index];
+        } while((this->checkOwnership(second_character_name, has_build) == false) 
+            || this->isAlreadyInFirst(second_character_name, team_one_id));
 
-    int team_two_id = this->getSecondTeam<std::string>(team_one_id, second_character_name, has_build, true);
+        team_two_id = this->getSecondTeam<std::string>(team_one_id, second_character_name, has_build, true);
+    } while(team_two_id == -1);
+    
     if (team_two_id!=-1) 
         this->displayTwoTeams(team_one_id, team_two_id);
 }
@@ -367,7 +366,7 @@ int Team_list::getFirstTeam(T data, bool need_build, bool shuffle_mode) {
         } while(user_input_check.count(picked_team) != 1);
     } else {
         // Acquérir un numéro random
-        int random_index = std::rand() % (user_input_check.size()-1);
+        int random_index = (std::rand() % (user_input_check.size())) - 1;
         int first_elem = 0;
         for (const auto &elem: user_input_check) {
             if (first_elem == random_index) {
@@ -421,7 +420,7 @@ int Team_list::getSecondTeam(int team_one_id, T data, bool need_build, bool shuf
         } while(user_input_check.count(picked_team_2) != 1); 
     } else {
         // Acquérir un numéro random
-        int random_index = std::rand() % (user_input_check.size()-1);
+        int random_index = (std::rand() % (user_input_check.size())) - 1;
         int first_elem = 0;
         for (const auto &elem: user_input_check) {
             if (first_elem == random_index) {
