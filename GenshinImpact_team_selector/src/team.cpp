@@ -18,7 +18,9 @@ void Team::displayTeam() const {
 
 bool Team::isCharacterInTeam(std::string character_name, bool need_build) {
     for (unsigned int i = 0; i < TEAM_SIZE; i++) {
-        if (character_name.compare(this->m_team[i].getName()) == 0 && (!need_build || this->m_team[i].hasBuild())) {
+        if ((need_build == true) && (this->m_team[i].hasBuild() == false))
+            return false;
+        if (character_name.compare(this->m_team[i].getName()) == 0) {
             return true;
         }
     }
