@@ -12,6 +12,7 @@ int main(int argc, char ** argv){
     // Object creation
     Box * my_box = new Box();
     Team_list * my_teams = new Team_list(my_box);
+    Statistics * my_stats = new Statistics(my_teams, my_box);
     // Menu options
     std::vector<std::string> menu_options = {
         "Quit                                        ",
@@ -36,7 +37,7 @@ int main(int argc, char ** argv){
         if ((choice < 0) || (choice > menu_options.size() - 1))
             printRestriction<std::string>("Please pick an existing choice from the list");
         else 
-            menuSwitch(choice, my_box, my_teams);
+            menuSwitch(choice, my_box, my_teams, my_stats);
     } while(choice != 0);
     printTitle<std::string>("####################### GENSHIN IMPACT TEAM SELECTOR #######################");
     // Désalocation

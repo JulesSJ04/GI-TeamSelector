@@ -20,6 +20,9 @@ public:
     Team_list(Box * b);
     virtual ~Team_list() {}
 
+    // GETTERS AND SETTERS
+    std::unordered_map<int, Team>& getTeams() {return m_teams;}
+
     // FILE MANIPULATION
     void loadTeams(); // Charger les teams de la base de données
     void addTeamToFile(String_team new_team); // Ajouter une team à la base de donnée

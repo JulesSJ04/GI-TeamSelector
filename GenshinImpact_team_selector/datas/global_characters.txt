@@ -75,3 +75,5 @@ Charlotte,6
 Furina,4
 Chevreuse,5
 Navia,1
+Xianyun,0
+Gaming,5

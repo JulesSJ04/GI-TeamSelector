@@ -91,9 +91,45 @@ void menuTeams(Team_list * teams) {
 }
 
 /*
+* @brief Link to the different statistics display
+*/
+void menuStatistics(Statistics * stats) {
+    std::vector<std::string> menu_options = {
+        "Quit                                           ",
+        "3 Most used characters over my teams           ",
+        "3 Less used characters over my teams           ",
+        "Characters frequency characters over my teams  ",
+        "Characters frequency over all teams            "
+    };
+    for (unsigned int i = 0; i < menu_options.size(); i++) {
+        printMessage<std::string>(std::to_string(i) + ". " + menu_options.at(i));
+    }
+    int choice = 0;
+    do {
+        choice = inputUser<std::string, int>("Pick an option from the displayed one");
+    } while(((choice < 0) || (choice > menu_options.size())));
+    switch (choice) {
+    case 0:
+        return;
+    case 1:
+        stats->displayCharacterFrequency(static_cast<Mode>(1));
+        break;
+    case 2:
+        stats->displayCharacterFrequency(static_cast<Mode>(2));
+        break;
+    case 3:
+        stats->displayCharacterFrequency(static_cast<Mode>(0));
+        break;
+    default:
+        break;    
+    }
+
+}
+
+/*
 * @brief Link to the different options of the menu
 */
-void menuSwitch(int choice, Box * box, Team_list * teams)
+void menuSwitch(int choice, Box * box, Team_list * teams, Statistics * stats)
 {
     switch (choice)
     {
@@ -113,6 +149,9 @@ void menuSwitch(int choice, Box * box, Team_list * teams)
         break;
     case 5: // Add a team to the list
         teams->addTeam();
+        break;
+    case 6: // Add a team to the list
+        menuStatistics(stats);
         break;
     default:
         printRestriction<std::string>("Not implemented yet");

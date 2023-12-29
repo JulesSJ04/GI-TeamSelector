@@ -69,6 +69,12 @@ enum Element{
     OMNI = 7
 };
 
+enum Mode {
+    ALL = 0,
+    MOST = 1,
+    LESS = 2
+};
+
 std::string elementToString(Element elem);
 std::string roleToString(Character_role role);
 void displayPossibleRole();

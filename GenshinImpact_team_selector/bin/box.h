@@ -37,6 +37,18 @@ public:
     void getCharacterDifference();
     Character getCharacterByName(std::string name);
     std::vector<std::string> getCharactersName();
+    // Getter for m_characters
+    const std::unordered_map<std::string, Character>& getCharacters() const {
+        return m_characters;
+    }
+    // Getter for m_existing_characters
+    const std::unordered_map<std::string, Element>& getExistingCharacters() const {
+        return m_existing_characters;
+    }
+    // Getter for m_non_added_characters
+    const std::set<std::string>& getNonAddedCharacters() const {
+        return m_non_added_characters;
+    }
 
     // DATA CHECK
     bool hasCharacter(std::string c, int build);

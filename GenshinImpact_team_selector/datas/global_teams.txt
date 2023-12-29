@@ -162,3 +162,10 @@ HuTao-Swirl,HuTao,Sucrose,Xianling,Xingqiu,7
 HuTao-Swirl,HuTao,Sucrose,Xianling,Yelan,7
 HuTao-Nationale,HuTao,Xianling,Xingqiu,Yelan,8
 HuTao-MultiElem,Fischl,HuTao,Xingqiu,Zhongli,7
+NaviaHypercarry,Bennett,Furina,Navia,Xianling,8
+Raiden-Vortex,Bennett,Raiden,Venti,Xianling,7
+Eula-Supra,Bennett,Eula,Raiden,Zhongli,7
+Kequing-Dendro,Fischl,Kazuha,Keqing,Voyageur,7
+Keqing-Hype,Fischl,Kazuha,Keqing,Nahida,8
+Keqing-Hyperbloom,Baizhu,Keqing,Nahida,Xingqiu,8
+Keqing-Hyper-Dendro,Keqing,Nahida,Sara,Zhongli,7
