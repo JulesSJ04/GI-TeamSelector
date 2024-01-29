@@ -75,6 +75,12 @@ enum Mode {
     LESS = 2
 };
 
+struct String_team {
+    std::string name;
+    std::string characters[4];
+    int note;
+};
+
 std::string elementToString(Element elem);
 std::string roleToString(Character_role role);
 void displayPossibleRole();

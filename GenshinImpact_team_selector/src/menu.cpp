@@ -112,13 +112,16 @@ void menuStatistics(Statistics * stats) {
     case 0:
         return;
     case 1:
-        stats->displayCharacterFrequency(static_cast<Mode>(1));
+        stats->computeCharacterFrequency(static_cast<Mode>(1), true);
         break;
     case 2:
-        stats->displayCharacterFrequency(static_cast<Mode>(2));
+        stats->computeCharacterFrequency(static_cast<Mode>(2), true);
         break;
     case 3:
-        stats->displayCharacterFrequency(static_cast<Mode>(0));
+        stats->computeCharacterFrequency(static_cast<Mode>(0), true);
+        break;
+    case 4:
+        stats->computeNonAddedCharacterFrequency();
         break;
     default:
         break;    

@@ -3,12 +3,6 @@
 #include "character.h"
 #include "box.h"
 
-struct String_team {
-    std::string name;
-    std::string characters[4];
-    int note;
-};
-
 class Team_list {
 private:
     static int s_team_id;
@@ -22,6 +16,7 @@ public:
 
     // GETTERS AND SETTERS
     std::unordered_map<int, Team>& getTeams() {return m_teams;}
+    std::vector<String_team>& getGlobalTeams() {return this->m_global_teams;}
 
     // FILE MANIPULATION
     void loadTeams(); // Charger les teams de la base de données
