@@ -86,6 +86,7 @@ std::string roleToString(Character_role role);
 void displayPossibleRole();
 void displayPossibleElement();
 void clear_console();
+int generate_random(int min_value, int max_value);
 
 /* Display methods */
 template<class T> 

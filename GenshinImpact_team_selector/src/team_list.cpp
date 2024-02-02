@@ -1,4 +1,5 @@
 #include "team_list.h"
+#include <random>
 
 int Team_list::s_team_id = 0;
 
@@ -141,8 +142,9 @@ bool Team_list::isAlreadyUsed(int team_id, std::vector<std::string> picked_chara
     std::vector<std::string> four_characters_names = this->m_teams.at(team_id).getNames();
     for(const auto &elem: four_characters_names) {
         for (const auto &elem2: picked_character_names) {
-            if(elem.compare(elem2) == 0)
+            if(elem.compare(elem2) == 0) {
                 return true;
+            }
         }
     }
     return false;
@@ -280,20 +282,22 @@ void Team_list::displayTeamsByElement(bool is_double_choice) {
 
 void Team_list::displayRandomTeams(bool is_double_choice) {
     this->computePossibleTeams();
+
     // Vérifier que des équipes sont réalisables
     if (this->m_teams.size() == 0) {
         printRestriction<std::string>("No team matches your characters");
         return;
     }
+
+    // Verifier si nécéssité de build pour le premier personnage
     bool has_build = this->buildPrompt();
     int team_one_id = -1;
     // Acquérir le nom du personnage aléatoirement
     std::vector<std::string> name_list = this->m_box->getCharactersName();
     std::string character_name;
-    std::srand(static_cast<unsigned int>(std::time(0)));
     do {
         do {
-            int random_index = std::rand() % (name_list.size()-1);
+            int random_index = generate_random(0, name_list.size() - 1);
             character_name = name_list[random_index];
         } while(this->checkOwnership(character_name, has_build, true) == false);
         // Acquérir la première team
@@ -314,7 +318,7 @@ void Team_list::displayRandomTeams(bool is_double_choice) {
     int team_two_id = -1;
     do {
         do {
-            int random_index = std::rand() % (name_list.size()-1);
+            int random_index = generate_random(0, name_list.size() - 1);
             second_character_name = name_list[random_index];
         } while((this->checkOwnership(second_character_name, has_build) == false) 
             || this->isAlreadyInFirst(second_character_name, team_one_id));
@@ -365,9 +369,10 @@ int Team_list::getFirstTeam(T data, bool need_build, bool shuffle_mode) {
             picked_team = inputUser<std::string, int>("Pick a team from the displayed list from his number :");
         } while(user_input_check.count(picked_team) != 1);
     } else {
-        // Acquérir un numéro random
-        int random_index = (std::rand() % (user_input_check.size())) - 1;
+        // Générer un random parmis la liste d'id possible
+        int random_index = generate_random(0, user_input_check.size() - 1);
         int first_elem = 0;
+        // Parcourir jusqu'à ce que le random soit le meme que l'id de la team
         for (const auto &elem: user_input_check) {
             if (first_elem == random_index) {
                 return elem;
@@ -385,7 +390,7 @@ int Team_list::getSecondTeam(int team_one_id, T data, bool need_build, bool shuf
     std::set<int> user_input_check;
     // Si selon élement, demander si main dps
     bool main_dps = false;
-    int picked_team_2 = 0; 
+    int picked_team_2 = -1; 
 
     if (!shuffle_mode) {
         if constexpr (std::is_same_v<T, int>)
@@ -395,6 +400,7 @@ int Team_list::getSecondTeam(int team_one_id, T data, bool need_build, bool shuf
     // Etape 2 : parcourir les équipes
     for (auto &elem: this->m_teams) {
         // Vérifier si elles contiennent le personnage
+        
         if (this->isCharacterInTeamCondition(elem.second, data, main_dps, need_build))  
         {
             // Vérifier si l'un des 4 personnages n'est pas déjà dans une équipe 
@@ -420,8 +426,9 @@ int Team_list::getSecondTeam(int team_one_id, T data, bool need_build, bool shuf
         } while(user_input_check.count(picked_team_2) != 1); 
     } else {
         // Acquérir un numéro random
-        int random_index = (std::rand() % (user_input_check.size())) - 1;
+        int random_index = generate_random(0, user_input_check.size() - 1);
         int first_elem = 0;
+        // Parcourir les teams possibles
         for (const auto &elem: user_input_check) {
             if (first_elem == random_index) {
                 return elem;

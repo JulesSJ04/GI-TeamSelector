@@ -33,13 +33,13 @@ public:
 // Custom comparator
 struct GreaterValue {
     bool operator()(const std::pair<std::string, int>& a, const std::pair<std::string, int>& b) const {
-        return a.second > b.second;
+        return a.second >= b.second;
     }
 };
 
 struct LesserValue {
     bool operator()(const std::pair<std::string, int>& a, const std::pair<std::string, int>& b) const {
-        return a.second < b.second;
+        return a.second <= b.second;
     }
 };
 

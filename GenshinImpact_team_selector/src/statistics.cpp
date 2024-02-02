@@ -67,6 +67,7 @@ void Statistics::computeCharacterFrequency(Mode display_m, bool need_display) {
 ******************************************************************************************************************************/
 
 void Statistics::computeNonAddedCharacterFrequency() {
+    this->m_team_list->computePossibleTeams();
     this->m_global_character_frequency.clear();
     // Récuper les teams et augmenter la fréquence
     std::vector<String_team>& teams = this->m_team_list->getGlobalTeams();
@@ -75,6 +76,7 @@ void Statistics::computeNonAddedCharacterFrequency() {
             this->m_global_character_frequency[elem.characters[i]]++;
         }
     }
+
     // Sort le set
     std::set<std::pair<std::string, int>, GreaterValue> sortedSet(
         m_global_character_frequency.begin(), m_global_character_frequency.end());

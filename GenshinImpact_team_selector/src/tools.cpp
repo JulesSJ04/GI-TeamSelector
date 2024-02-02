@@ -1,6 +1,7 @@
 #include "general.h"
 #include "box.h"
 #include "team_list.h"
+#include <random>
 
 /*
 * @brief convert Element variable type to string
@@ -70,4 +71,16 @@ void clear_console() {
     catch (...) {
         std::cout << "Couldn't clear" << std::endl;
     }
+}
+
+
+/*
+* @brief: generate a random int between min anx max, default 0 to max
+*/
+int generate_random(int min_value, int max_value) {
+    std::random_device rd;
+    std::mt19937 gen(rd()); // Mersenne Twister 19937 generator
+    std::uniform_int_distribution<int> distribution(min_value, max_value);
+    int random_index = distribution(gen);
+    return random_index;
 }

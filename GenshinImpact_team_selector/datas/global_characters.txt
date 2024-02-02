@@ -77,3 +77,4 @@ Chevreuse,5
 Navia,1
 Xianyun,0
 Gaming,5
+Chiori,1

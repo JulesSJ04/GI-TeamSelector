@@ -208,9 +208,9 @@ void Box::displayBox() const {
 }
 
 void Box::displayExistingCharacters() const {
-    std::cout << "All the existing characters are :" << std::endl;
+    printRestriction<std::string>("All the existing characters are :");
     for (const auto &elem: this->m_existing_characters) {
-        std::cout << "Character " << elem.first << " is " << elementToString(elem.second) << std::endl;
+        std::cout << elem.first << " is " << elementToString(elem.second) << " // ";
     }
 }
 
@@ -378,8 +378,11 @@ bool Box::hasCharacter(std::string name, int build) {
 
 bool Box::characterExist(std::string name) {
     std::unordered_map<std::string,Element>::const_iterator got = this->m_existing_characters.find(name);
-    if(got == this->m_existing_characters.end()) 
+    if(got == this->m_existing_characters.end()) {
+        this->displayExistingCharacters();
+        std::cout << std::endl;
         return false;
+    }  
     return true;
 }
 

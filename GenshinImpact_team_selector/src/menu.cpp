@@ -80,6 +80,7 @@ void menuTeams(Team_list * teams) {
         teams->displayRandomTeams();
         break;
     case 6:
+        //printRestriction("FUNCTIONNALITY UNDER MAINTENANCE");
         teams->displayRandomTeams(true);
         break;
     case 7:
