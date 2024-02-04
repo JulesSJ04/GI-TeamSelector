@@ -72,7 +72,8 @@ void Team_list::addTeamToFile(String_team new_team) {
                 std::to_string(new_team.note);
             outputFile << line << std::endl;
             outputFile.close();
-            printSystem<std::string>("Team added to file (" + line + ")"); 
+            clear_console();
+            printMessage<std::string>("Team added to file (" + line + ")"); 
         }
     } catch (const std::exception& e) {
         std::cout << "An error occurred: " << e.what() << std::endl;

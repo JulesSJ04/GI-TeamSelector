@@ -15,6 +15,12 @@ If you encounter a permission denied problem, improve the right of the .exe file
 sudo chmod 700 ./build/genshin_team_selector.exe
 ```
 
+# Useful command in case of a bug
+Clear the terminal:
+```
+CTRL+C
+```
+
 # Current version
 
 BETA-Version : still under development

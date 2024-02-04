@@ -100,7 +100,8 @@ void menuStatistics(Statistics * stats) {
         "3 Most used characters over my teams           ",
         "3 Less used characters over my teams           ",
         "Characters frequency characters over my teams  ",
-        "Characters frequency over all teams            "
+        "Characters frequency over all teams            ",
+        "Best team(s) for 1 character                   "
     };
     for (unsigned int i = 0; i < menu_options.size(); i++) {
         printMessage<std::string>(std::to_string(i) + ". " + menu_options.at(i));
@@ -123,6 +124,9 @@ void menuStatistics(Statistics * stats) {
         break;
     case 4:
         stats->computeNonAddedCharacterFrequency();
+        break;
+    case 5:
+        printRestriction("Will be implemented in a future update");
         break;
     default:
         break;    
