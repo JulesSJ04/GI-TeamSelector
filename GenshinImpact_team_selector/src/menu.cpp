@@ -51,6 +51,7 @@ void menuTeams(Team_list * teams) {
         "Element : 2 teams                            ",
         "Random : 1 team                              ",
         "Random : 2 teams                             ",
+        "Best team for 1 character                    ",
         "Display all teams                            "
     };
     for (unsigned int i = 0; i < menu_options.size(); i++) {
@@ -80,11 +81,13 @@ void menuTeams(Team_list * teams) {
         teams->displayRandomTeams();
         break;
     case 6:
-        //printRestriction("FUNCTIONNALITY UNDER MAINTENANCE");
         teams->displayRandomTeams(true);
         break;
     case 7:
-        teams->displayTeams();;
+        teams->displayCharacterBestTeams();
+        break;
+    case 8:
+        teams->displayTeams();
         break;
     default:
         break;
@@ -100,8 +103,7 @@ void menuStatistics(Statistics * stats) {
         "3 Most used characters over my teams           ",
         "3 Less used characters over my teams           ",
         "Characters frequency characters over my teams  ",
-        "Characters frequency over all teams            ",
-        "Best team(s) for 1 character                   "
+        "Characters frequency over all teams            "
     };
     for (unsigned int i = 0; i < menu_options.size(); i++) {
         printMessage<std::string>(std::to_string(i) + ". " + menu_options.at(i));
@@ -124,9 +126,6 @@ void menuStatistics(Statistics * stats) {
         break;
     case 4:
         stats->computeNonAddedCharacterFrequency();
-        break;
-    case 5:
-        printRestriction("Will be implemented in a future update");
         break;
     default:
         break;    

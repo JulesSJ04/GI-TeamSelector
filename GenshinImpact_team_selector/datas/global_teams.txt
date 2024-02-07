@@ -191,7 +191,7 @@ Xiao-Hyper,Faruzan,Furina,Xianyun,Xiao,10
 Xiao-Hyper,Faruzan,Bennett,Xianyun,Xiao,10
 Xiao-Hyper,Faruzan,Furina,Jean,Xiao,8
 Xiao-Pyro,Bennett,Furina,Xianyun,Xiao,9
-Gaming-Plunge,Bennett,Furina,Gaming,Xianyun,9
+Gaming-Plunge,Bennett,Furina,Gaming,Xianyun,10
 Gaming-Plunge-Melt,Diona,Furina,Gaming,Xianyun,7
 Diluc-Plunge,Bennett,Diluc,Furina,Xianyun,9
 BennettHyperPlunge,Bennett,Furina,Xianyun,Yelan,8
@@ -221,3 +221,15 @@ Klee-Overload,Bennett,Chevreuse,Fischl,Klee,7
 Lyney-Overload,Bennett,Chevreuse,Fischl,Lyney,7
 Yae-Overload,Bennett,Chevreuse,Fischl,Yae,7
 Chevreuse-Nationale,Bennett,Chevreuse,Fischl,Xianling,7
+Gaming-Plunge,Bennett,Yelan,Gaming,Xianyun,8
+Gaming-Plunge,Bennett,Xingqiu,Gaming,Xianyun,8
+Gaming-Plunge,Bennett,Kokomi,Gaming,Xianyun,8
+Gaming-Swirl,Bennett,Furina,Gaming,Kazuha,7
+Gaming-Swirl,Bennett,Furina,Gaming,Jean,7
+Gaming-Double-Hydro,Furina,Gaming,Xianyun,Yelan,8
+Gaming-Double-Hydro,Furina,Gaming,Xianyun,Xingqiu,8
+Gaming-Melt,Furina,Gaming,Rosalia,Xianyun,7
+Gaming-Melt,Furina,Gaming,Kaeya,Xianyun,6
+Gaming-MonoPyro,Bennett,Gaming,Xianling,Xianyun,8
+Gaming-Overload,Bennett,Chevreuse,Fischl,Gaming,7
+Gaming-Burgeon,Furina,Gaming,Nahida,Xianyun,8

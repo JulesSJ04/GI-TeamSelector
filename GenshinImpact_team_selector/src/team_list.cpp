@@ -1,5 +1,7 @@
 #include "team_list.h"
 #include <random>
+#include <iostream>
+#include <algorithm>
 
 int Team_list::s_team_id = 0;
 
@@ -184,9 +186,9 @@ void Team_list::displayTeams() {
 
 void Team_list::displayTwoTeams(int team1_id, int team2_id) {
     clear_console();
-    printTitle<std::string>(" ---------------------- PICKED TEAM 1 ---------------------- ");
+    printTitle<std::string>(" ---------------------- TEAM 1 ---------------------- ");
     this->m_teams.at(team1_id).displayTeam();
-    printTitle<std::string>(" ---------------------- PICKED TEAM 2 ---------------------- ");
+    printTitle<std::string>(" ---------------------- TEAM 2 ---------------------- ");
     this->m_teams.at(team2_id).displayTeam();
     printTitle<std::string>(" ----------------------------------------------------------- ");
 }
@@ -196,11 +198,7 @@ void Team_list::displayTwoTeams(int team1_id, int team2_id) {
 ******************************************************************************************************************************/
 
 void Team_list::displayTeamsByName(bool is_double_choice) {
-    //Vérifier que les teams sont à jour
-    this->computePossibleTeams();
-    // Vérifier que des équipes sont réalisables
-    if (this->m_teams.size() == 0) {
-        printRestriction<std::string>("No team matches your characters");
+    if(!this->updateAndCheckSize()){
         return;
     }
 
@@ -209,7 +207,7 @@ void Team_list::displayTeamsByName(bool is_double_choice) {
     // Vérifier si le personnage est présent dans la box 
     bool has_build = this->buildPrompt();
     if (this->checkOwnership(character_name, has_build) == false) {
-        printRestriction<std::string>("Specified character is not in your team");
+        printRestriction<std::string>("Specified character is not in your box");
         return;
     }
 
@@ -227,7 +225,7 @@ void Team_list::displayTeamsByName(bool is_double_choice) {
     std::string second_character_name = inputUser<std::string, std::string>("Pick a character you want to see the teams :");    
     // Vérifier si le personnage est présent dans la box 
     if (this->checkOwnership(second_character_name, has_build) == false) {
-        printRestriction<std::string>("Specified character is not in your team");
+        printRestriction<std::string>("Specified character is not in your box");
         return;
     }
     int team_two_id = this->getSecondTeam<std::string>(team_one_id, second_character_name, has_build);
@@ -235,18 +233,56 @@ void Team_list::displayTeamsByName(bool is_double_choice) {
         this->displayTwoTeams(team_one_id, team_two_id);
 }
 
+void Team_list::displayCharacterBestTeams() {
+    if(!this->updateAndCheckSize()){
+        return;
+    }
+
+    // Récupérer le nom du personnages
+    std::string character_name = inputUser<std::string, std::string>("Pick a character you want to see the teams :");    
+    // Vérifier si le personnage est présent dans la box 
+    bool has_build = this->buildPrompt();
+    if (this->checkOwnership(character_name, has_build) == false) {
+        printRestriction<std::string>("Specified character is not in your box");
+        return;
+    }
+    // Container de stockage
+    std::vector<std::pair<int, int>> character_teams;
+
+    // Parcourir les équipes
+    for (auto &elem: this->m_teams) {
+        // Vérifier si elles contiennent le personnage
+        if (this->isCharacterInTeamCondition(elem.second, character_name, false, has_build))  
+        {
+            // Insérer dans le lot
+            std::pair<int, int> tmp = {elem.first, elem.second.getNote()};
+            character_teams.push_back(tmp);
+        }
+    }
+
+    // Sort par la note
+    std::sort(character_teams.begin(), character_teams.end(), sort_pair<int>);
+
+    // Tant que les notes sont égales à celle de la première, afficher les équipes
+    int grade = character_teams.at(0).second;
+    int cpt = 0;
+    clear_console();
+    printTitle<std::string>("-------------- Character best team(s) --------------");
+    while(character_teams.at(cpt).second == grade){
+        this->m_teams.at(character_teams.at(cpt).first).displayTeam();
+        cpt++;
+    }
+}
+
 /******************************************************************************************************************************
 * TEAM DISPLAY FROM ELEMENT
 ******************************************************************************************************************************/
 
 void Team_list::displayTeamsByElement(bool is_double_choice) {
-    //Vérifier que les teams sont à jour
-    this->computePossibleTeams();
-    // Vérifier que des équipes sont réalisables
-    if (this->m_teams.size() == 0) {
-        printRestriction<std::string>("No team matches your characters");
+    if(!this->updateAndCheckSize()){
         return;
     }
+
     // Acquérir l'élement voulu
     int picked_element = -1;
     printMessage<std::string>("Choose an element from the following elements :");
@@ -282,11 +318,7 @@ void Team_list::displayTeamsByElement(bool is_double_choice) {
 ******************************************************************************************************************************/
 
 void Team_list::displayRandomTeams(bool is_double_choice) {
-    this->computePossibleTeams();
-
-    // Vérifier que des équipes sont réalisables
-    if (this->m_teams.size() == 0) {
-        printRestriction<std::string>("No team matches your characters");
+    if(!this->updateAndCheckSize()){
         return;
     }
 
@@ -502,6 +534,17 @@ bool Team_list::mainDpsPrompt() {
     } while((need_mainDPS != 0) && (need_mainDPS != 1));
     if(need_mainDPS == 0) 
         return false;
+    return true;
+}
+
+bool Team_list::updateAndCheckSize(){
+    //Vérifier que les teams sont à jour
+    this->computePossibleTeams();
+    // Vérifier que des équipes sont réalisables
+    if (this->m_teams.size() == 0) {
+        printRestriction("No team matches your characters");
+        return false;
+    }
     return true;
 }
 

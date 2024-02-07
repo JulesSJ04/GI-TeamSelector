@@ -35,7 +35,8 @@ public:
 
     // TEAM DISPLAY FROM NAME
     void displayTeamsByName(bool is_double_choice = false);
-    
+    void displayCharacterBestTeams();
+
     // TEAM DISPLAY FROM ELEMENT
     void displayTeamsByElement(bool is_double_choice = false);
 
@@ -52,6 +53,8 @@ public:
     void addTeam();
     int buildPrompt();
     bool mainDpsPrompt();
+
+    bool updateAndCheckSize();
 
     template<class T>
     bool isCharacterInTeamCondition(Team& team, T data, bool is_main_dps, bool need_build); 

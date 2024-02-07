@@ -88,6 +88,11 @@ void displayPossibleElement();
 void clear_console();
 int generate_random(int min_value, int max_value);
 
+template <class T>
+bool sort_pair(const std::pair<T, int> &a, const std::pair<T, int> &b){
+    return a.second >= b.second;
+}
+
 /* Display methods */
 template<class T> 
 void printRestriction(const T& data) {
